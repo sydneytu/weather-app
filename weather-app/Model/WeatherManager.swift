@@ -14,7 +14,7 @@ protocol WeatherManagerDelegate {
 }
 
 struct WeatherManager {
-    let baseURL = "http://api.weatherapi.com/v1"
+    let baseURL = "https://api.weatherapi.com/v1"
     let currentMethod = "/current.json"
     let API_KEY = WeatherMapApiKey
     
@@ -22,13 +22,13 @@ struct WeatherManager {
     
     func fetchCurrentWeather(cityName: String) {
         let urlString = "\(baseURL)\(currentMethod)?key=\(API_KEY)&q=\(cityName)"
-        print(urlString)
-        // perform request
+        performRequest(with: urlString)
     }
     
     func fetchCurrentWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
         let urlString = "\(baseURL)\(currentMethod)?key=\(API_KEY)&q=\(latitude),\(longitude)"
         print(urlString)
+        performRequest(with: urlString)
     }
     
     func performRequest(with urlString: String) {
@@ -40,24 +40,34 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-//                    if let weather = self.parseJSON(safeData) {
-//                        self.delegate?.didUpdateWeather(self, weather: weather)
-//                    }
+                    if let weather = self.parseJSON(safeData) {
+                        print(weather.cityName, weather.region)
+                        self.delegate?.didUpdateWeather(self, weather: weather)
+                    }
                 }
             }
             task.resume()
         }
     }
     
-//    func parseJSON(_ weatherData: Data) -> WeatherModel? {
-//        let decoder = JSONDecoder()
-//        do {
-//            let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
-//
-//        }
-//        catch {
-//            delegate?.didFailWithError(error: error)
-//            return nil
-//        }
-//    }
+    func parseJSON(_ weatherData: Data) -> WeatherModel? {
+        let decoder = JSONDecoder()
+        do {
+            let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
+            let weather = WeatherModel(
+                cityName: decodedData.location.name,
+                region: decodedData.location.region,
+                is_day: decodedData.current.is_day,
+                temp: decodedData.current.temp_f,
+                condition: decodedData.current.condition.text,
+                windMph: decodedData.current.wind_mph,
+                feelsLike: decodedData.current.feelslike_f,
+                uv: decodedData.current.uv)
+            return weather
+        }
+        catch {
+            delegate?.didFailWithError(error: error)
+            return nil
+        }
+    }
 }

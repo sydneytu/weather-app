@@ -108,11 +108,12 @@ class WeatherViewController: UIViewController {
     }()
     
     let locationManager = CLLocationManager()
-    let weatherManager = WeatherManager()
+    var weatherManager = WeatherManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        weatherManager.delegate = self
         locationManager.delegate = self
         
         locationManager.requestWhenInUseAuthorization()
@@ -182,6 +183,22 @@ class WeatherViewController: UIViewController {
             currentWeatherStackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -10)
             
         ])
+    }
+}
+
+// MARK: - WeatherManagerDelegate
+extension WeatherViewController: WeatherManagerDelegate {
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
+        DispatchQueue.main.async {
+            self.cityLabel.text = "\(weather.cityName)"
+            self.temperatureLabel.text = weather.tempString
+            self.feelsLikeLabel.text = weather.feelsLikeString
+        }
+    }
+    
+    func didFailWithError(error: Error) {
+        // TODO: show alert saying could not get weather
+        print(error.localizedDescription)
     }
 }
 
