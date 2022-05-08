@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class WeatherViewController: UIViewController {
     
     
     private let mainView: UIView = {
@@ -43,9 +43,10 @@ class ViewController: UIViewController {
     
     private let cityLabel: UILabel = {
         let cityLabel = UILabel()
-        cityLabel.text = "Los Angeles"
-        cityLabel.font = UIFont.systemFont(ofSize: 25, weight: .regular)
+        cityLabel.text = "Los Angeles, CA"
+        cityLabel.font = UIFont.systemFont(ofSize: 20, weight: .regular)
 //        cityLabel.backgroundColor = .green
+        cityLabel.textColor = .white
         cityLabel.sizeToFit()
         return cityLabel
     }()
@@ -53,9 +54,10 @@ class ViewController: UIViewController {
     private let temperatureLabel: UILabel = {
         let temperatureLabel = UILabel()
         temperatureLabel.text = "78°F"
-        temperatureLabel.font = UIFont.systemFont(ofSize: 72, weight: .semibold)
+        temperatureLabel.font = UIFont.systemFont(ofSize: 72, weight: .light)
 //        temperatureLabel.backgroundColor = .link
         temperatureLabel.sizeToFit()
+        temperatureLabel.textColor = .white
         return temperatureLabel
     }()
     
@@ -65,7 +67,27 @@ class ViewController: UIViewController {
         dateLabel.font = UIFont.systemFont(ofSize: 18, weight: .light)
 //        dateLabel.backgroundColor = .cyan
         dateLabel.sizeToFit()
+        dateLabel.textColor = .white
         return dateLabel
+    }()
+    
+    private let feelsLikeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Feels Like 75°"
+        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
+        label.sizeToFit()
+        label.textColor = .white
+        return label
+    }()
+    
+    private let conditionImageView: UIImageView = {
+        let iv = UIImageView()
+        let config = UIImage.SymbolConfiguration(pointSize: 56, weight: .light)
+        iv.image = UIImage(systemName: "sun.max", withConfiguration: config)
+        iv.clipsToBounds = true
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = #colorLiteral(red: 1, green: 0.835642755, blue: 0.3751339912, alpha: 1)
+        return iv
     }()
     
     private let currentLocationButton: UIButton = {
@@ -89,7 +111,6 @@ class ViewController: UIViewController {
         
         view.backgroundColor = #colorLiteral(red: 0.2705882353, green: 0.3215686275, blue: 0.768627451, alpha: 1)
         createMainView()
-        cityLabel.text = "Paris, France"
     }
     
     func createMainView() {
@@ -106,12 +127,17 @@ class ViewController: UIViewController {
         mainView.addSubview(searchStackView)
         
         // currentWeatherView
-        let currentWeatherStackView = UIStackView(arrangedSubviews: [temperatureLabel, dateLabel])
-        currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
-        currentWeatherStackView.axis = .vertical
+        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel ,dateLabel])
+        currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+        currentWeatherInfoStackView.axis = .vertical
 //        currentWeatherStackView.backgroundColor = .blue
+        
+        
+        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionImageView])
+        currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
+        currentWeatherStackView.axis = .horizontal
+        currentWeatherStackView.distribution = .fillProportionally
         currentWeatherView.addSubview(currentWeatherStackView)
-
         
         // mainStackView
         let mainStackView = UIStackView(arrangedSubviews: [searchStackView, currentWeatherView, hourlyWeatherView])
@@ -139,8 +165,8 @@ class ViewController: UIViewController {
             // currentWeatherStackView
             currentWeatherStackView.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor, constant: 20),
             currentWeatherStackView.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor, constant: -20),
-            currentWeatherStackView.topAnchor.constraint(equalTo: currentWeatherView.topAnchor, constant: 20),
-            currentWeatherStackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -20)
+            currentWeatherStackView.topAnchor.constraint(equalTo: currentWeatherView.topAnchor, constant: 10),
+            currentWeatherStackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -10)
             
         ])
     }

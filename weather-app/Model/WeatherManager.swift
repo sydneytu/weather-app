@@ -7,3 +7,8 @@
 
 import Foundation
 
+struct WeatherManager {
+    let baseURL = "http://api.weatherapi.com/v1"
+    let apiKey = ""
+    
+}

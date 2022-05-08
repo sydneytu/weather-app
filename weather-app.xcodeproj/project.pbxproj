@@ -14,6 +14,7 @@
 		A7C574A82826FBFB00BE4E1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7C574A72826FBFB00BE4E1B /* Assets.xcassets */; };
 		A7C574AB2826FBFB00BE4E1B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7C574A92826FBFB00BE4E1B /* LaunchScreen.storyboard */; };
 		A7C574B6282837F500BE4E1B /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C574B5282837F500BE4E1B /* WeatherManager.swift */; };
+		A7C574B82828468600BE4E1B /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C574B72828468600BE4E1B /* WeatherData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		A7C574AA2826FBFB00BE4E1B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A7C574AC2826FBFB00BE4E1B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A7C574B5282837F500BE4E1B /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
+		A7C574B72828468600BE4E1B /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				A7C574B5282837F500BE4E1B /* WeatherManager.swift */,
+				A7C574B72828468600BE4E1B /* WeatherData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7C574A32826FBF900BE4E1B /* ViewController.swift in Sources */,
+				A7C574B82828468600BE4E1B /* WeatherData.swift in Sources */,
 				A7C5749F2826FBF900BE4E1B /* AppDelegate.swift in Sources */,
 				A7C574B6282837F500BE4E1B /* WeatherManager.swift in Sources */,
 				A7C574A12826FBF900BE4E1B /* SceneDelegate.swift in Sources */,
