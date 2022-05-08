@@ -67,20 +67,46 @@ class ViewController: UIViewController {
         dateLabel.sizeToFit()
         return dateLabel
     }()
+    
+    private let currentLocationButton: UIButton = {
+       let currentLocationButton = UIButton()
+        currentLocationButton.setImage(UIImage(systemName: "location"), for: .normal)
+        currentLocationButton.sizeToFit()
+        currentLocationButton.tintColor = .white
+        return currentLocationButton
+    }()
+    
+    private let searchButton: UIButton = {
+       let searchButton = UIButton()
+        searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        searchButton.sizeToFit()
+        searchButton.tintColor = .white
+        return searchButton
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = #colorLiteral(red: 0.2705882353, green: 0.3215686275, blue: 0.768627451, alpha: 1)
         createMainView()
-        cityLabel.text = "Paris"
+        cityLabel.text = "Paris, France"
     }
     
     func createMainView() {
         view.addSubview(mainView)
         
+        // searchView
+        let searchStackView = UIStackView(arrangedSubviews: [currentLocationButton, cityLabel, searchButton])
+        searchStackView.translatesAutoresizingMaskIntoConstraints = false
+        searchStackView.axis = .horizontal
+        searchStackView.distribution = .equalSpacing
+//        searchStackView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
+        searchStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        searchStackView.isLayoutMarginsRelativeArrangement = true
+        mainView.addSubview(searchStackView)
+        
         // currentWeatherView
-        let currentWeatherStackView = UIStackView(arrangedSubviews: [cityLabel, dateLabel, temperatureLabel])
+        let currentWeatherStackView = UIStackView(arrangedSubviews: [temperatureLabel, dateLabel])
         currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
         currentWeatherStackView.axis = .vertical
 //        currentWeatherStackView.backgroundColor = .blue
@@ -88,7 +114,7 @@ class ViewController: UIViewController {
 
         
         // mainStackView
-        let mainStackView = UIStackView(arrangedSubviews: [currentWeatherView, hourlyWeatherView])
+        let mainStackView = UIStackView(arrangedSubviews: [searchStackView, currentWeatherView, hourlyWeatherView])
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.axis = .vertical
         mainStackView.spacing = 10
@@ -115,7 +141,7 @@ class ViewController: UIViewController {
             currentWeatherStackView.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor, constant: -20),
             currentWeatherStackView.topAnchor.constraint(equalTo: currentWeatherView.topAnchor, constant: 20),
             currentWeatherStackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -20)
-
+            
         ])
     }
     
