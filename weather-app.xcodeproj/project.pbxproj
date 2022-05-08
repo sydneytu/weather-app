@@ -56,15 +56,39 @@
 		A7C5749D2826FBF900BE4E1B /* weather-app */ = {
 			isa = PBXGroup;
 			children = (
+				A7C574B2282703EB00BE4E1B /* Model */,
+				A7C574B4282703FA00BE4E1B /* Controller */,
+				A7C574B3282703F100BE4E1B /* View */,
 				A7C5749E2826FBF900BE4E1B /* AppDelegate.swift */,
 				A7C574A02826FBF900BE4E1B /* SceneDelegate.swift */,
-				A7C574A22826FBF900BE4E1B /* ViewController.swift */,
-				A7C574A42826FBF900BE4E1B /* Main.storyboard */,
 				A7C574A72826FBFB00BE4E1B /* Assets.xcassets */,
 				A7C574A92826FBFB00BE4E1B /* LaunchScreen.storyboard */,
 				A7C574AC2826FBFB00BE4E1B /* Info.plist */,
 			);
 			path = "weather-app";
+			sourceTree = "<group>";
+		};
+		A7C574B2282703EB00BE4E1B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A7C574B3282703F100BE4E1B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A7C574A42826FBF900BE4E1B /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A7C574B4282703FA00BE4E1B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				A7C574A22826FBF900BE4E1B /* ViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -292,7 +316,8 @@
 				INFOPLIST_FILE = "weather-app/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -320,7 +345,8 @@
 				INFOPLIST_FILE = "weather-app/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
