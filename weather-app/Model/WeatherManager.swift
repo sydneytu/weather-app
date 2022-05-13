@@ -55,11 +55,11 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-                    self.parseJSON(safeData)
-//                    if let weather = self.parseJSON(safeData) {
-//                        print(weather.cityName, weather.region)
-//                        self.delegate?.didUpdateWeather(self, weather: weather)
-//                    }
+//                    self.parseJSON(safeData)
+                    if let weather = self.parseJSON(safeData) {
+                        print(weather.cityName, weather.region)
+                        self.delegate?.didUpdateWeather(self, weather: weather)
+                    }
                 }
             }
             task.resume()
@@ -70,7 +70,16 @@ struct WeatherManager {
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
-            print(decodedData.forecast.forecastday[0].hour.first?.condition.text as Any)
+            
+            let forecast = decodedData.forecast.forecastday.map { forecastDay -> ForecastModel in
+                let day  = DaysModel(date: forecastDay.date, avgTemp: forecastDay.day.avgtemp_f)
+                
+                let hours = forecastDay.hour.map { hour in
+                    return HoursModel(time: hour.time_epoch, temp: hour.temp_f, condition: hour.condition.text)
+                }
+                return ForecastModel(days: day, hours: hours)
+            }
+            
             let current = CurrentModel(
                 is_day: decodedData.current.is_day,
                 temp: decodedData.current.temp_f,
@@ -78,25 +87,15 @@ struct WeatherManager {
                 windMph: decodedData.current.wind_mph,
                 feelsLike: decodedData.current.feelslike_f,
                 uv: decodedData.current.uv)
-            let days = DaysModel(
-                date: decodedData.forecast.forecastday.date,
-                avgTemp: decodedData.forecast.forecastday.day.avgtemp_f)
-//            let hours = HoursModel(
-//                time: decodedData.forecast.forecastday.hour.time,
-//                temp: decodedData.forecast.forecastday.hour.temp_f,
-//                condition: decodedData.forecast.forecastday.hour.condition)
-//            let forecast = ForecastModel(
-//                days: days,
-//                hours: hours)
-//            let weather = WeatherModel(
-//                cityName: decodedData.location.name,
-//                region: decodedData.location.region,
-//                current: current, forcast: forecast)
-//            return weather
+            let weather = WeatherModel(
+                cityName: decodedData.location.name,
+                region: decodedData.location.region,
+                current: current, forcast: forecast)
+            return weather
         }
         catch {
             delegate?.didFailWithError(error: error)
-//            return nil
+            return nil
         }
     }
 }

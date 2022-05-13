@@ -47,7 +47,7 @@ struct Day: Codable {
 }
 
 struct Hour: Codable {
-    let time: String
+    let time_epoch: Int
     let temp_f: Double
     let condition: Condition
 }
