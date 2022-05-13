@@ -82,12 +82,23 @@ class WeatherViewController: UIViewController {
     
     private let conditionImageView: UIImageView = {
         let iv = UIImageView()
-        let config = UIImage.SymbolConfiguration(pointSize: 56, weight: .light)
+        let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
         iv.image = UIImage(systemName: "sun.max", withConfiguration: config)
         iv.clipsToBounds = true
+        iv.sizeToFit()
         iv.contentMode = .scaleAspectFit
         iv.tintColor = #colorLiteral(red: 1, green: 0.835642755, blue: 0.3751339912, alpha: 1)
         return iv
+    }()
+    
+    private let conditionDescLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Partly Cloudy"
+        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
+        label.sizeToFit()
+        label.textColor = .white
+        return label
+        
     }()
     
     private let currentLocationButton: UIButton = {
@@ -135,7 +146,6 @@ class WeatherViewController: UIViewController {
         searchStackView.translatesAutoresizingMaskIntoConstraints = false
         searchStackView.axis = .horizontal
         searchStackView.distribution = .equalSpacing
-//        searchStackView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
         searchStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         searchStackView.isLayoutMarginsRelativeArrangement = true
         mainView.addSubview(searchStackView)
@@ -144,13 +154,16 @@ class WeatherViewController: UIViewController {
         let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel ,dateLabel])
         currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         currentWeatherInfoStackView.axis = .vertical
-//        currentWeatherStackView.backgroundColor = .blue
         
+        let conditionStackView = UIStackView(arrangedSubviews: [conditionImageView, conditionDescLabel])
+        conditionStackView.translatesAutoresizingMaskIntoConstraints = false
+        conditionStackView.axis = .vertical
+        conditionStackView.distribution = .fillProportionally
         
-        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionImageView])
+        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionStackView])
         currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
         currentWeatherStackView.axis = .horizontal
-        currentWeatherStackView.distribution = .fillProportionally
+        currentWeatherStackView.distribution = .equalSpacing
         currentWeatherView.addSubview(currentWeatherStackView)
         
         // mainStackView
@@ -159,7 +172,6 @@ class WeatherViewController: UIViewController {
         mainStackView.axis = .vertical
         mainStackView.spacing = 10
         mainStackView.distribution = .fill
-//        mainStackView.backgroundColor = .red
         mainView.addSubview(mainStackView)
         
         // activate constraints
@@ -191,14 +203,15 @@ extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         DispatchQueue.main.async {
             self.cityLabel.text = "\(weather.cityName)"
-            self.temperatureLabel.text = weather.tempString
-            self.feelsLikeLabel.text = weather.feelsLikeString
+            self.temperatureLabel.text = weather.current.tempString
+            self.feelsLikeLabel.text = weather.current.feelsLikeString
+            self.conditionDescLabel.text = weather.current.condition
         }
     }
     
     func didFailWithError(error: Error) {
         // TODO: show alert saying could not get weather
-        print(error.localizedDescription)
+        print(error)
     }
 }
 
@@ -209,13 +222,13 @@ extension WeatherViewController: CLLocationManagerDelegate {
             locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
-            weatherManager.fetchCurrentWeather(latitude: lat, longitude: lon)
+            weatherManager.fetchForecastWeather(latitude: lat, longitude: lon)
         }
         
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("error:: \(error.localizedDescription)")
+        print("error:: \(error)")
     }
 }
 
