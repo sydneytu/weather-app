@@ -20,20 +20,7 @@ struct WeatherManager {
     let API_KEY = WeatherMapApiKey
     let numDays = 2
     
-    //https://api.weatherapi.com/v1/forecast.json?key=439755fbecda4ef7833184340220805&q=Richmond&days=1
-    
     var delegate: WeatherManagerDelegate?
-    
-    func fetchCurrentWeather(cityName: String) {
-        let urlString = "\(baseURL)\(currentMethod)?key=\(API_KEY)&q=\(cityName)"
-        performRequest(with: urlString)
-    }
-    
-    func fetchCurrentWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-        let urlString = "\(baseURL)\(currentMethod)?key=\(API_KEY)&q=\(latitude),\(longitude)"
-        print(urlString)
-        performRequest(with: urlString)
-    }
     
     func fetchForecastWeather(cityName: String) {
         let urlString = "\(baseURL)\(forecastMethod)?key=\(API_KEY)&q=\(cityName)&days=\(numDays)"
@@ -55,7 +42,6 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-//                    self.parseJSON(safeData)
                     if let weather = self.parseJSON(safeData) {
                         print(weather.cityName, weather.region)
                         self.delegate?.didUpdateWeather(self, weather: weather)
