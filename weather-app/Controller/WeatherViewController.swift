@@ -28,24 +28,23 @@ class WeatherViewController: UIViewController {
     private let hourlyWeatherView: UIView = {
         let hourlyWeatherView = UIView()
         hourlyWeatherView.translatesAutoresizingMaskIntoConstraints = false
-        hourlyWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.28)
         hourlyWeatherView.layer.cornerRadius = 25
         return hourlyWeatherView
     }()
     
-//    private let dailyWeatherView: UIView = {
-//        let dailyWeatherView = UIView()
-//        dailyWeatherView.translatesAutoresizingMaskIntoConstraints = false
-//        dailyWeatherView.backgroundColor = .purple
-//        dailyWeatherView.layer.cornerRadius = 25
-//        return dailyWeatherView
-//    }()
+    private let dailyWeatherView: UIView = {
+        let dailyWeatherView = UIView()
+        dailyWeatherView.translatesAutoresizingMaskIntoConstraints = false
+//        dailyWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.28)
+        dailyWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
+        dailyWeatherView.layer.cornerRadius = 25
+        return dailyWeatherView
+    }()
     
     private let cityLabel: UILabel = {
         let cityLabel = UILabel()
         cityLabel.text = "Los Angeles, CA"
         cityLabel.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-//        cityLabel.backgroundColor = .green
         cityLabel.textColor = .white
         cityLabel.sizeToFit()
         return cityLabel
@@ -55,7 +54,6 @@ class WeatherViewController: UIViewController {
         let temperatureLabel = UILabel()
         temperatureLabel.text = "78°F"
         temperatureLabel.font = UIFont.systemFont(ofSize: 72, weight: .light)
-//        temperatureLabel.backgroundColor = .link
         temperatureLabel.sizeToFit()
         temperatureLabel.textColor = .white
         return temperatureLabel
@@ -65,7 +63,6 @@ class WeatherViewController: UIViewController {
        let dateLabel = UILabel()
         dateLabel.text = "May 8"
         dateLabel.font = UIFont.systemFont(ofSize: 18, weight: .light)
-//        dateLabel.backgroundColor = .cyan
         dateLabel.sizeToFit()
         dateLabel.textColor = .white
         return dateLabel
@@ -118,6 +115,19 @@ class WeatherViewController: UIViewController {
         return searchButton
     }()
     
+    private var hourlyCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
+        layout.scrollDirection = .horizontal
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.register(HourCell.self, forCellWithReuseIdentifier: "hourCell")
+        cv.isScrollEnabled = true
+        cv.backgroundColor = UIColor.black.withAlphaComponent(0)
+        return cv
+    }()
+    
+    var heightConstraint:[NSLayoutConstraint]?
+    
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
 
@@ -126,9 +136,12 @@ class WeatherViewController: UIViewController {
     
         weatherManager.delegate = self
         locationManager.delegate = self
+        hourlyCollectionView.dataSource = self
+        hourlyCollectionView.delegate = self
         
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
+        
         
         view.backgroundColor = #colorLiteral(red: 0.2705882353, green: 0.3215686275, blue: 0.768627451, alpha: 1)
         createMainView()
@@ -140,6 +153,9 @@ class WeatherViewController: UIViewController {
     
     func createMainView() {
         view.addSubview(mainView)
+        createCurrentWeatherView()
+        createHourlyWeatherView()
+        createDailyWeatherView()
         
         // searchView
         let searchStackView = UIStackView(arrangedSubviews: [currentLocationButton, cityLabel, searchButton])
@@ -148,26 +164,9 @@ class WeatherViewController: UIViewController {
         searchStackView.distribution = .equalSpacing
         searchStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         searchStackView.isLayoutMarginsRelativeArrangement = true
-        mainView.addSubview(searchStackView)
-        
-        // currentWeatherView
-        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel ,dateLabel])
-        currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
-        currentWeatherInfoStackView.axis = .vertical
-        
-        let conditionStackView = UIStackView(arrangedSubviews: [conditionImageView, conditionDescLabel])
-        conditionStackView.translatesAutoresizingMaskIntoConstraints = false
-        conditionStackView.axis = .vertical
-        conditionStackView.distribution = .fillProportionally
-        
-        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionStackView])
-        currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
-        currentWeatherStackView.axis = .horizontal
-        currentWeatherStackView.distribution = .equalSpacing
-        currentWeatherView.addSubview(currentWeatherStackView)
         
         // mainStackView
-        let mainStackView = UIStackView(arrangedSubviews: [searchStackView, currentWeatherView, hourlyWeatherView])
+        let mainStackView = UIStackView(arrangedSubviews: [searchStackView, currentWeatherView, hourlyWeatherView, dailyWeatherView])
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.axis = .vertical
         mainStackView.spacing = 10
@@ -187,14 +186,61 @@ class WeatherViewController: UIViewController {
             mainStackView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -10),
             mainStackView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10),
             mainStackView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 10),
-            
-            // currentWeatherStackView
+        ])
+    }
+    
+    func createCurrentWeatherView() {
+        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel ,dateLabel])
+        currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+        currentWeatherInfoStackView.axis = .vertical
+        
+        let conditionStackView = UIStackView(arrangedSubviews: [conditionImageView, conditionDescLabel])
+        conditionStackView.translatesAutoresizingMaskIntoConstraints = false
+        conditionStackView.axis = .vertical
+        conditionStackView.distribution = .fillProportionally
+        
+        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionStackView])
+        currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
+        currentWeatherStackView.axis = .horizontal
+        currentWeatherStackView.distribution = .equalSpacing
+        currentWeatherView.addSubview(currentWeatherStackView)
+        
+        NSLayoutConstraint.activate([
             currentWeatherStackView.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor, constant: 20),
             currentWeatherStackView.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor, constant: -20),
             currentWeatherStackView.topAnchor.constraint(equalTo: currentWeatherView.topAnchor, constant: 10),
             currentWeatherStackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -10)
-            
         ])
+    }
+    
+    func createHourlyWeatherView() {
+        let view = UIStackView(arrangedSubviews: [hourlyCollectionView])
+        view.translatesAutoresizingMaskIntoConstraints = false
+        hourlyWeatherView.addSubview(view)
+        
+        hourlyCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: hourlyWeatherView.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: hourlyWeatherView.trailingAnchor),
+            view.topAnchor.constraint(equalTo: hourlyWeatherView.topAnchor, constant: 10),
+            view.bottomAnchor.constraint(equalTo: hourlyWeatherView.bottomAnchor, constant: -10),
+            hourlyWeatherView.heightAnchor.constraint(equalToConstant: 150)
+        ])
+    }
+    
+    func createDailyWeatherView() {
+        dailyWeatherView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let temp = UILabel()
+        temp.text = "temporary"
+        temp.textColor = .yellow
+        temp.font = UIFont.systemFont(ofSize: 72, weight: .regular)
+        temp.translatesAutoresizingMaskIntoConstraints = false
+        temp.sizeToFit()
+        dailyWeatherView.addSubview(temp)
+        // create table view
+        
     }
 }
 
@@ -232,3 +278,34 @@ extension WeatherViewController: CLLocationManagerDelegate {
     }
 }
 
+// MARK: - UICollectionViewDataSource
+extension WeatherViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 12
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = hourlyCollectionView.dequeueReusableCell(withReuseIdentifier: "hourCell", for: indexPath) as? HourCell else {
+            fatalError("Unable to dequeue hourCell.")
+        }
+        return cell
+    }
+    
+}
+
+// MARK: - UICollectionViewDelegate
+extension WeatherViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // nothing
+    }
+    
+}
+
+extension WeatherViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = hourlyCollectionView.bounds.size.width / CGFloat(4.5)
+        return CGSize(width: width, height: hourlyCollectionView.bounds.size.height - 5)
+
+    }
+    
+}
