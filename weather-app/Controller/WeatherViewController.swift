@@ -126,7 +126,7 @@ class WeatherViewController: UIViewController {
         return cv
     }()
     
-    var heightConstraint:[NSLayoutConstraint]?
+    var hoursWeatherArr = [HoursModel]()
     
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
@@ -252,6 +252,10 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.temperatureLabel.text = weather.current.tempString
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
+            if let hours = weather.forecast.first?.hours {
+                self.hoursWeatherArr = hours
+            }
+            self.hourlyCollectionView.reloadData()
         }
     }
     
@@ -281,13 +285,22 @@ extension WeatherViewController: CLLocationManagerDelegate {
 // MARK: - UICollectionViewDataSource
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 12
+        return 24
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = hourlyCollectionView.dequeueReusableCell(withReuseIdentifier: "hourCell", for: indexPath) as? HourCell else {
             fatalError("Unable to dequeue hourCell.")
         }
+        DispatchQueue.main.async {
+            if self.hoursWeatherArr.count > 0 {
+                let hour = self.hoursWeatherArr[indexPath.item]
+                cell.temp = hour.formattedTemp
+                cell.time = hour.formattedTime
+            }
+            
+        }
+        
         return cell
     }
     

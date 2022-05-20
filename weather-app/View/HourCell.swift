@@ -13,21 +13,36 @@ class HourCell: UICollectionViewCell {
     
     private var timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "10 AM"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 18, weight: .light)
         label.sizeToFit()
+        label.textAlignment = .center
         label.textColor = .white
         return label
     }()
     
     private var tempLabel: UILabel = {
         let label = UILabel()
-        label.text = "75°"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
+        label.text = ""
+        label.font = UIFont.boldSystemFont(ofSize: 25)
         label.sizeToFit()
+        label.textAlignment = .center
         label.textColor = .white
         return label
     }()
+    
+    var time: String? {
+        didSet {
+            
+            timeLabel.text = "\(time!)"
+        }
+    }
+    
+    var temp: String? {
+        didSet {
+            tempLabel.text = "\(temp!)"
+        }
+    }
     
     // image
     
@@ -40,9 +55,24 @@ class HourCell: UICollectionViewCell {
         
         let stackView = UIStackView(arrangedSubviews: [timeLabel, tempLabel])
         stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 5
         stackView.distribution = .fillEqually
+        stackView.layer.cornerRadius = 25
         
         addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: self.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+        
+        if let time = time {
+//            time = 
+        }
+        
         
     }
     

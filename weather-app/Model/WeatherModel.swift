@@ -11,7 +11,7 @@ struct WeatherModel {
     let cityName: String
     let region: String
     let current: CurrentModel
-    let forcast: [ForecastModel]
+    let forecast: [ForecastModel]
 }
 
 struct CurrentModel {
@@ -45,4 +45,15 @@ struct HoursModel {
     let time: Int
     let temp: Double
     let condition: String
+    
+    var formattedTime: String {
+        let timeString = Date(timeIntervalSince1970: TimeInterval(time))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h a"
+        return dateFormatter.string(from: timeString)
+    }
+    
+    var formattedTemp: String {
+        return "\(String(format: "%.0f", temp))°F"
+    }
 }
