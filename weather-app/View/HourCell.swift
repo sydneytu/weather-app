@@ -24,7 +24,7 @@ class HourCell: UICollectionViewCell {
     private var tempLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont.boldSystemFont(ofSize: 25)
+        label.font = UIFont.systemFont(ofSize: 25, weight: .regular)
         label.sizeToFit()
         label.textAlignment = .center
         label.textColor = .white
@@ -33,7 +33,6 @@ class HourCell: UICollectionViewCell {
     
     var time: String? {
         didSet {
-            
             timeLabel.text = "\(time!)"
         }
     }
@@ -43,6 +42,8 @@ class HourCell: UICollectionViewCell {
             tempLabel.text = "\(temp!)"
         }
     }
+    
+    var isCurrentCell: Bool?
     
     // image
     
@@ -68,10 +69,6 @@ class HourCell: UICollectionViewCell {
             stackView.topAnchor.constraint(equalTo: self.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-        
-        if let time = time {
-//            time = 
-        }
         
         
     }

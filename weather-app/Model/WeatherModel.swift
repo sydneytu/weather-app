@@ -45,6 +45,7 @@ struct HoursModel {
     let time: Int
     let temp: Double
     let condition: String
+    var isCurrent: Bool
     
     var formattedTime: String {
         let timeString = Date(timeIntervalSince1970: TimeInterval(time))
@@ -55,5 +56,12 @@ struct HoursModel {
     
     var formattedTemp: String {
         return "\(String(format: "%.0f", temp))°F"
+    }
+    
+    var timeAsHour: Int {
+        let timeString = Date(timeIntervalSince1970: TimeInterval(time))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH"
+        return Int(dateFormatter.string(from: timeString))!
     }
 }

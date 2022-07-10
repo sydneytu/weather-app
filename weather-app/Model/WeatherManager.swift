@@ -61,7 +61,7 @@ struct WeatherManager {
                 let day  = DaysModel(date: forecastDay.date, avgTemp: forecastDay.day.avgtemp_f)
                 
                 let hours = forecastDay.hour.map { hour in
-                    return HoursModel(time: hour.time_epoch, temp: hour.temp_f, condition: hour.condition.text)
+                    return HoursModel(time: hour.time_epoch, temp: hour.temp_f, condition: hour.condition.text, isCurrent: false)
                 }
                 return ForecastModel(days: day, hours: hours)
             }

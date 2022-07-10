@@ -155,7 +155,7 @@ class WeatherViewController: UIViewController {
         view.addSubview(mainView)
         createCurrentWeatherView()
         createHourlyWeatherView()
-        createDailyWeatherView()
+//        createDailyWeatherView()
         
         // searchView
         let searchStackView = UIStackView(arrangedSubviews: [currentLocationButton, cityLabel, searchButton])
@@ -242,6 +242,21 @@ class WeatherViewController: UIViewController {
         // create table view
         
     }
+    
+    func time24() -> Int {
+        let time = Date()
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH"
+        return Int(timeFormatter.string(from: time))!
+    }
+    
+    func scrollToCurrentHour() {
+        self.hourlyCollectionView.scrollToItem(at: IndexPath(item: time24(), section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
+    }
+    
+    func isCurrentTime(cellTime: Int) -> Bool {
+        return time24() == cellTime ? true : false
+    }
 }
 
 // MARK: - WeatherManagerDelegate
@@ -256,6 +271,7 @@ extension WeatherViewController: WeatherManagerDelegate {
                 self.hoursWeatherArr = hours
             }
             self.hourlyCollectionView.reloadData()
+            self.scrollToCurrentHour()
         }
     }
     
@@ -285,20 +301,22 @@ extension WeatherViewController: CLLocationManagerDelegate {
 // MARK: - UICollectionViewDataSource
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 24
+        return hoursWeatherArr.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = hourlyCollectionView.dequeueReusableCell(withReuseIdentifier: "hourCell", for: indexPath) as? HourCell else {
             fatalError("Unable to dequeue hourCell.")
         }
-        DispatchQueue.main.async {
-            if self.hoursWeatherArr.count > 0 {
-                let hour = self.hoursWeatherArr[indexPath.item]
-                cell.temp = hour.formattedTemp
-                cell.time = hour.formattedTime
+
+        if self.hoursWeatherArr.count > 0 {
+            var hour = self.hoursWeatherArr[indexPath.item]
+            cell.temp = hour.formattedTemp
+            cell.time = hour.formattedTime
+            if isCurrentTime(cellTime: hour.timeAsHour) {
+                hour.isCurrent = true
+                cell.isCurrentCell = hour.isCurrent
             }
-            
         }
         
         return cell
@@ -316,7 +334,7 @@ extension WeatherViewController: UICollectionViewDelegate {
 
 extension WeatherViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = hourlyCollectionView.bounds.size.width / CGFloat(4.5)
+        let width = hourlyCollectionView.bounds.size.width / CGFloat(5)
         return CGSize(width: width, height: hourlyCollectionView.bounds.size.height - 5)
 
     }
