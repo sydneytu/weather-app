@@ -9,7 +9,6 @@ import UIKit
 import CoreLocation
 
 class WeatherViewController: UIViewController {
-    
     private let mainView: UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,61 +18,45 @@ class WeatherViewController: UIViewController {
     
     private let currentWeatherView: UIView = {
         let currentWeatherView = UIView()
-        currentWeatherView.translatesAutoresizingMaskIntoConstraints = false
+        currentWeatherView.configureUIView()
         currentWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
-        currentWeatherView.layer.cornerRadius = 25
         return currentWeatherView
     }()
     
     private let hourlyWeatherView: UIView = {
         let hourlyWeatherView = UIView()
-        hourlyWeatherView.translatesAutoresizingMaskIntoConstraints = false
-        hourlyWeatherView.layer.cornerRadius = 25
+        hourlyWeatherView.configureUIView()
         return hourlyWeatherView
     }()
     
     private let dailyWeatherView: UIView = {
         let dailyWeatherView = UIView()
-        dailyWeatherView.translatesAutoresizingMaskIntoConstraints = false
-//        dailyWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.28)
+        dailyWeatherView.configureUIView()
         dailyWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
-        dailyWeatherView.layer.cornerRadius = 25
         return dailyWeatherView
     }()
     
     private let cityLabel: UILabel = {
         let cityLabel = UILabel()
-        cityLabel.text = "Los Angeles, CA"
-        cityLabel.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-        cityLabel.textColor = .white
-        cityLabel.sizeToFit()
+        cityLabel.configureLabel(size: 20, weight: .regular, text: "Los Angeles, CA")
         return cityLabel
     }()
     
     private let temperatureLabel: UILabel = {
         let temperatureLabel = UILabel()
-        temperatureLabel.text = "78°F"
-        temperatureLabel.font = UIFont.systemFont(ofSize: 72, weight: .light)
-        temperatureLabel.sizeToFit()
-        temperatureLabel.textColor = .white
+        temperatureLabel.configureLabel(size: 72, weight: .light, text: "78°F")
         return temperatureLabel
     }()
     
     private let dateLabel: UILabel = {
        let dateLabel = UILabel()
-        dateLabel.text = "May 8"
-        dateLabel.font = UIFont.systemFont(ofSize: 18, weight: .light)
-        dateLabel.sizeToFit()
-        dateLabel.textColor = .white
+        dateLabel.configureLabel(size: 18, weight: .light, text: "May 8")
         return dateLabel
     }()
     
     private let feelsLikeLabel: UILabel = {
         let label = UILabel()
-        label.text = "Feels Like 75°"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
-        label.sizeToFit()
-        label.textColor = .white
+        label.configureLabel(size: 18, weight: .light, text: "Feels Like 75°")
         return label
     }()
     
@@ -89,11 +72,8 @@ class WeatherViewController: UIViewController {
     }()
     
     private let conditionDescLabel: UILabel = {
-       let label = UILabel()
-        label.text = "Partly Cloudy"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
-        label.sizeToFit()
-        label.textColor = .white
+        let label = UILabel()
+        label.configureLabel(size: 18, weight: .light, text: "Partly Cloudy")
         return label
         
     }()
@@ -126,11 +106,19 @@ class WeatherViewController: UIViewController {
         return cv
     }()
     
-    var hoursWeatherArr = [HoursModel]()
+    private var dailyTableView: UITableView = {
+        let tv = UITableView()
+        tv.register(DailyCell.self, forCellReuseIdentifier: "dailyCell")
+        tv.backgroundColor = UIColor.black.withAlphaComponent(0)
+        return tv
+    }()
     
+    var hoursWeatherArr = [HoursModel]()
+    var dailyWeatherArr = [ForecastModel]()
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -138,24 +126,27 @@ class WeatherViewController: UIViewController {
         locationManager.delegate = self
         hourlyCollectionView.dataSource = self
         hourlyCollectionView.delegate = self
+        dailyTableView.dataSource = self
+        dailyTableView.delegate = self
         
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
-        
         
         view.backgroundColor = #colorLiteral(red: 0.2705882353, green: 0.3215686275, blue: 0.768627451, alpha: 1)
         createMainView()
     }
     
+    // MARK: - Actions
     @objc func userLocationButtonPressed() {
         locationManager.requestLocation()
     }
     
+    // MARK: - Helpers
     func createMainView() {
         view.addSubview(mainView)
         createCurrentWeatherView()
         createHourlyWeatherView()
-//        createDailyWeatherView()
+        createDailyWeatherView()
         
         // searchView
         let searchStackView = UIStackView(arrangedSubviews: [currentLocationButton, cityLabel, searchButton])
@@ -173,7 +164,6 @@ class WeatherViewController: UIViewController {
         mainStackView.distribution = .fill
         mainView.addSubview(mainStackView)
         
-        // activate constraints
         NSLayoutConstraint.activate([
             // mainView
             mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -181,7 +171,6 @@ class WeatherViewController: UIViewController {
             mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            // main stack view
             mainStackView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 10),
             mainStackView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -10),
             mainStackView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 10),
@@ -217,7 +206,6 @@ class WeatherViewController: UIViewController {
         let view = UIStackView(arrangedSubviews: [hourlyCollectionView])
         view.translatesAutoresizingMaskIntoConstraints = false
         hourlyWeatherView.addSubview(view)
-        
         hourlyCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -230,16 +218,17 @@ class WeatherViewController: UIViewController {
     }
     
     func createDailyWeatherView() {
+        let view = UIStackView(arrangedSubviews: [dailyTableView])
+        view.translatesAutoresizingMaskIntoConstraints = false
+        dailyWeatherView.addSubview(view)
         dailyWeatherView.translatesAutoresizingMaskIntoConstraints = false
         
-        let temp = UILabel()
-        temp.text = "temporary"
-        temp.textColor = .yellow
-        temp.font = UIFont.systemFont(ofSize: 72, weight: .regular)
-        temp.translatesAutoresizingMaskIntoConstraints = false
-        temp.sizeToFit()
-        dailyWeatherView.addSubview(temp)
-        // create table view
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: dailyWeatherView.leadingAnchor, constant: 5),
+            view.trailingAnchor.constraint(equalTo: dailyWeatherView.trailingAnchor, constant: -5),
+            view.topAnchor.constraint(equalTo: dailyWeatherView.topAnchor, constant: 10),
+            view.bottomAnchor.constraint(equalTo: dailyWeatherView.bottomAnchor, constant: -10)
+        ])
         
     }
     
@@ -267,9 +256,13 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.temperatureLabel.text = weather.current.tempString
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
+            
             if let hours = weather.forecast.first?.hours {
                 self.hoursWeatherArr = hours
             }
+            self.dailyWeatherArr = weather.forecast
+            self.dailyTableView.reloadData()
+            
             self.hourlyCollectionView.reloadData()
             self.scrollToCurrentHour()
         }
@@ -308,7 +301,6 @@ extension WeatherViewController: UICollectionViewDataSource {
         guard let cell = hourlyCollectionView.dequeueReusableCell(withReuseIdentifier: "hourCell", for: indexPath) as? HourCell else {
             fatalError("Unable to dequeue hourCell.")
         }
-
         if self.hoursWeatherArr.count > 0 {
             var hour = self.hoursWeatherArr[indexPath.item]
             cell.temp = hour.formattedTemp
@@ -318,20 +310,11 @@ extension WeatherViewController: UICollectionViewDataSource {
                 cell.isCurrentCell = hour.isCurrent
             }
         }
-        
         return cell
     }
-    
 }
 
-// MARK: - UICollectionViewDelegate
-extension WeatherViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // nothing
-    }
-    
-}
-
+// MARK: - UICollectionViewDelegateFlowLayout
 extension WeatherViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = hourlyCollectionView.bounds.size.width / CGFloat(5)
@@ -339,4 +322,26 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout {
 
     }
     
+}
+
+// MARK: - UITableViewDatasource
+extension WeatherViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dailyWeatherArr.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "dailyCell", for: indexPath) as? DailyCell else {
+            fatalError("Unable to dequeue DailyCell")
+        }
+        cell.textLabel?.text = "daily view"
+        return cell
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension WeatherViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // do nothing
+    }
 }

@@ -76,7 +76,8 @@ struct WeatherManager {
             let weather = WeatherModel(
                 cityName: decodedData.location.name,
                 region: decodedData.location.region,
-                current: current, forecast: forecast)
+                current: current,
+                forecast: forecast)
             return weather
         }
         catch {

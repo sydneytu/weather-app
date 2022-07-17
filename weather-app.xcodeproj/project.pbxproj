@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A71A38EC287A66F40081F0F6 /* DailyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71A38EB287A66F40081F0F6 /* DailyCell.swift */; };
 		A7B49A2F2837188C006DA00D /* HourCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B49A2E2837188C006DA00D /* HourCell.swift */; };
 		A7C5749F2826FBF900BE4E1B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C5749E2826FBF900BE4E1B /* AppDelegate.swift */; };
 		A7C574A12826FBF900BE4E1B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C574A02826FBF900BE4E1B /* SceneDelegate.swift */; };
@@ -18,9 +19,11 @@
 		A7C574B82828468600BE4E1B /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C574B72828468600BE4E1B /* WeatherData.swift */; };
 		A7C574BA282851FD00BE4E1B /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C574B9282851FD00BE4E1B /* WeatherModel.swift */; };
 		A7C574BC282853C300BE4E1B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C574BB282853C300BE4E1B /* Constants.swift */; };
+		A7DA38EE2883B8FC0028325F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7DA38ED2883B8FC0028325F /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A71A38EB287A66F40081F0F6 /* DailyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCell.swift; sourceTree = "<group>"; };
 		A7B49A2E2837188C006DA00D /* HourCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCell.swift; sourceTree = "<group>"; };
 		A7C5749B2826FBF900BE4E1B /* weather-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "weather-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7C5749E2826FBF900BE4E1B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -34,6 +37,7 @@
 		A7C574B72828468600BE4E1B /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		A7C574B9282851FD00BE4E1B /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 		A7C574BB282853C300BE4E1B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		A7DA38ED2883B8FC0028325F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,7 @@
 		A7C5749D2826FBF900BE4E1B /* weather-app */ = {
 			isa = PBXGroup;
 			children = (
+				A7DA38EC2883B8EA0028325F /* Utils */,
 				A7C574B2282703EB00BE4E1B /* Model */,
 				A7C574B4282703FA00BE4E1B /* Controller */,
 				A7C574B3282703F100BE4E1B /* View */,
@@ -94,6 +99,7 @@
 			children = (
 				A7C574A42826FBF900BE4E1B /* Main.storyboard */,
 				A7B49A2E2837188C006DA00D /* HourCell.swift */,
+				A71A38EB287A66F40081F0F6 /* DailyCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -104,6 +110,14 @@
 				A7C574A22826FBF900BE4E1B /* WeatherViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		A7DA38EC2883B8EA0028325F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A7DA38ED2883B8FC0028325F /* Extensions.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,8 +196,10 @@
 				A7C5749F2826FBF900BE4E1B /* AppDelegate.swift in Sources */,
 				A7C574B6282837F500BE4E1B /* WeatherManager.swift in Sources */,
 				A7C574BC282853C300BE4E1B /* Constants.swift in Sources */,
+				A7DA38EE2883B8FC0028325F /* Extensions.swift in Sources */,
 				A7C574BA282851FD00BE4E1B /* WeatherModel.swift in Sources */,
 				A7C574A12826FBF900BE4E1B /* SceneDelegate.swift in Sources */,
+				A71A38EC287A66F40081F0F6 /* DailyCell.swift in Sources */,
 				A7B49A2F2837188C006DA00D /* HourCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
