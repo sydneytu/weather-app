@@ -12,14 +12,14 @@ class WeatherViewController: UIViewController {
     private let mainView: UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.backgroundColor = #colorLiteral(red: 0.2705882353, green: 0.3215686275, blue: 0.768627451, alpha: 1)
+        mainView.backgroundColor = #colorLiteral(red: 0.9138072133, green: 0.9178827405, blue: 0.9283933043, alpha: 1)
         return mainView
     }()
     
     private let currentWeatherView: UIView = {
         let currentWeatherView = UIView()
         currentWeatherView.configureUIView()
-        currentWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
+        currentWeatherView.backgroundColor = #colorLiteral(red: 0.3450263739, green: 0.4461564422, blue: 0.9987166524, alpha: 1)
         return currentWeatherView
     }()
     
@@ -32,13 +32,14 @@ class WeatherViewController: UIViewController {
     private let dailyWeatherView: UIView = {
         let dailyWeatherView = UIView()
         dailyWeatherView.configureUIView()
-        dailyWeatherView.backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
+        dailyWeatherView.backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         return dailyWeatherView
     }()
     
     private let cityLabel: UILabel = {
         let cityLabel = UILabel()
         cityLabel.configureLabel(size: 20, weight: .regular, text: "Los Angeles, CA")
+        cityLabel.textColor = .black
         return cityLabel
     }()
     
@@ -82,7 +83,7 @@ class WeatherViewController: UIViewController {
        let button = UIButton()
         button.setImage(UIImage(systemName: "location"), for: .normal)
         button.sizeToFit()
-        button.tintColor = .white
+        button.tintColor = .black
         button.addTarget(self, action: #selector(userLocationButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -91,7 +92,7 @@ class WeatherViewController: UIViewController {
        let searchButton = UIButton()
         searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         searchButton.sizeToFit()
-        searchButton.tintColor = .white
+        searchButton.tintColor = .black
         return searchButton
     }()
     
@@ -132,7 +133,7 @@ class WeatherViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
-        view.backgroundColor = #colorLiteral(red: 0.2705882353, green: 0.3215686275, blue: 0.768627451, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0.9138072133, green: 0.9178827405, blue: 0.9283933043, alpha: 1)
         createMainView()
     }
     

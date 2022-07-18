@@ -17,7 +17,7 @@ class HourCell: UICollectionViewCell {
         label.font = UIFont.systemFont(ofSize: 18, weight: .light)
         label.sizeToFit()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .black
         return label
     }()
     
@@ -27,7 +27,7 @@ class HourCell: UICollectionViewCell {
         label.font = UIFont.systemFont(ofSize: 25, weight: .regular)
         label.sizeToFit()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .black
         return label
     }()
     
@@ -43,14 +43,22 @@ class HourCell: UICollectionViewCell {
         }
     }
     
-    var isCurrentCell: Bool?
+    var isCurrentCell: Bool? {
+        didSet {
+            if (isCurrentCell == true) {
+                backgroundColor = #colorLiteral(red: 0.3450263739, green: 0.4461564422, blue: 0.9987166524, alpha: 1)
+                tempLabel.textColor = .white
+                timeLabel.textColor = .white
+            }
+        }
+    }
     
     // image
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = #colorLiteral(red: 0.752800405, green: 0.7788824439, blue: 0.9847370982, alpha: 0.2809135993)
+        backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         
         layer.cornerRadius = 25
         
@@ -69,7 +77,6 @@ class HourCell: UICollectionViewCell {
             stackView.topAnchor.constraint(equalTo: self.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-        
         
     }
     

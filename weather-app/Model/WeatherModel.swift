@@ -23,7 +23,7 @@ struct CurrentModel {
     let uv: Double
     
     var tempString: String {
-        return "\(String(format: "%.0f", temp))°F"
+        return "\(String(format: "%.0f", temp))°"
     }
     
     var feelsLikeString: String {
@@ -55,7 +55,7 @@ struct HoursModel {
     }
     
     var formattedTemp: String {
-        return "\(String(format: "%.0f", temp))°F"
+        return "\(String(format: "%.0f", temp))°"
     }
     
     var timeAsHour: Int {

@@ -18,7 +18,7 @@ struct WeatherManager {
     let currentMethod = "/current.json"
     let forecastMethod = "/forecast.json"
     let API_KEY = WeatherMapApiKey
-    let numDays = 2
+    let numDays = 5
     
     var delegate: WeatherManagerDelegate?
     
@@ -78,6 +78,7 @@ struct WeatherManager {
                 region: decodedData.location.region,
                 current: current,
                 forecast: forecast)
+            print(weather.forecast.count)
             return weather
         }
         catch {

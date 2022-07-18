@@ -13,6 +13,15 @@ extension UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.layer.cornerRadius = 25
     }
+    
+    func configureGradientLayer(){
+        backgroundColor = .clear
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor]
+        gradient.locations = [0, 1]
+        gradient.frame = bounds
+        layer.addSublayer(gradient)
+    }
 }
 
 extension UILabel {
