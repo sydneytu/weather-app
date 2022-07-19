@@ -45,7 +45,7 @@ class WeatherViewController: UIViewController {
     
     private let temperatureLabel: UILabel = {
         let temperatureLabel = UILabel()
-        temperatureLabel.configureLabel(size: 72, weight: .light, text: "78°F")
+        temperatureLabel.configureLabel(size: 72, weight: .light, text: "78°")
         return temperatureLabel
     }()
     
@@ -229,7 +229,6 @@ class WeatherViewController: UIViewController {
             view.topAnchor.constraint(equalTo: dailyWeatherView.topAnchor, constant: 10),
             view.bottomAnchor.constraint(equalTo: dailyWeatherView.bottomAnchor, constant: -10)
         ])
-        
     }
     
     func time24() -> Int {
@@ -324,14 +323,15 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UITableViewDatasource
 extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dailyWeatherArr.count
+//        return self.dailyWeatherArr.count
+        return 7
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "dailyCell", for: indexPath) as? DailyCell else {
             fatalError("Unable to dequeue DailyCell")
         }
-        cell.textLabel?.text = "daily view"
+//        cell.textLabel?.text = "daily view"
         return cell
     }
 }
