@@ -76,16 +76,15 @@ class WeatherViewController: UIViewController {
         let label = UILabel()
         label.configureLabel(size: 18, weight: .light, text: "Partly Cloudy")
         return label
-        
     }()
     
     private let currentLocationButton: UIButton = {
-       let button = UIButton()
-        button.setImage(UIImage(systemName: "location"), for: .normal)
-        button.sizeToFit()
-        button.tintColor = .black
-        button.addTarget(self, action: #selector(userLocationButtonPressed), for: .touchUpInside)
-        return button
+       let bt = UIButton()
+        bt.setImage(UIImage(systemName: "location"), for: .normal)
+        bt.sizeToFit()
+        bt.tintColor = .black
+        bt.addTarget(self, action: #selector(userLocationButtonPressed), for: .touchUpInside)
+        return bt
     }()
     
     private let searchButton: UIButton = {
@@ -306,10 +305,9 @@ extension WeatherViewController: UICollectionViewDataSource {
             var hour = self.hoursWeatherArr[indexPath.item]
             cell.temp = hour.formattedTemp
             cell.time = hour.formattedTime
-            if isCurrentTime(cellTime: hour.timeAsHour) {
-                hour.isCurrent = true
-                cell.isCurrentCell = hour.isCurrent
-            }
+
+            hour.isCurrent = isCurrentTime(cellTime: hour.timeAsHour) ? true : false
+            cell.isCurrentCell = hour.isCurrent
         }
         return cell
     }
@@ -320,9 +318,7 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = hourlyCollectionView.bounds.size.width / CGFloat(5)
         return CGSize(width: width, height: hourlyCollectionView.bounds.size.height - 5)
-
     }
-    
 }
 
 // MARK: - UITableViewDatasource

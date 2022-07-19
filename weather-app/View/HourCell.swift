@@ -59,7 +59,6 @@ class HourCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
-        
         layer.cornerRadius = 25
         
         let stackView = UIStackView(arrangedSubviews: [timeLabel, tempLabel])
@@ -68,7 +67,6 @@ class HourCell: UICollectionViewCell {
         stackView.spacing = 5
         stackView.distribution = .fillEqually
         stackView.layer.cornerRadius = 25
-        
         addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -82,6 +80,12 @@ class HourCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
+        tempLabel.textColor = .black
+        timeLabel.textColor = .black
     }
     
     // MARK: - Actions
