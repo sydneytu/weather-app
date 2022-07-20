@@ -30,6 +30,7 @@ struct Current: Codable {
 
 struct Condition: Codable {
     let text: String
+    let code: Int
 }
 
 struct Forecast: Codable {

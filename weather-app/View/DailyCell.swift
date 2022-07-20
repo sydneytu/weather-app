@@ -60,7 +60,6 @@ class DailyCell: UITableViewCell {
         }
     }
     
-    
     var maxTemp: String? {
         didSet {
             maxTempLabel.attributedText = maxTemp!.attributedTempString(color: UIColor.black)
@@ -99,9 +98,6 @@ class DailyCell: UITableViewCell {
             stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10)
         ])
-        
-        
-
     }
     
     required init?(coder: NSCoder) {

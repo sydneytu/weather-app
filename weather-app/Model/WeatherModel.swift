@@ -19,6 +19,7 @@ struct CurrentModel {
     let is_day: Int
     let temp: Double
     let condition: String
+    let conditionCode: Int
     let windMph: Double
     let feelsLike: Double
     let uv: Double
@@ -31,7 +32,24 @@ struct CurrentModel {
         return "Feels Like \(String(format: "%.0f", feelsLike))°"
     }
     
-    // TODO: format date
+    var conditionName: String {
+        switch conditionCode {
+        case 1000: // Sunny, Clear
+            return "sun.max.fill"
+        case 1003: // Partly Cloudy
+            return "cloud.sun.fill"
+        case 1006: // Cloudy
+            return "cloud.fill"
+        case 1009: // Overcast
+            return ""
+        case 1030: // Mist
+            return ""
+        case 1063: // Patchy Rain possible
+            return ""
+        default:
+            return ""
+        }
+    }
 }
 
 struct ForecastModel {
@@ -67,6 +85,7 @@ struct HoursModel {
     let time: Int
     let temp: Double
     let condition: String
+    let conditionCode: Int
     var isCurrent: Bool
     
     var formattedTime: String {

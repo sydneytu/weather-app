@@ -61,7 +61,7 @@ struct WeatherManager {
                 let day  = DaysModel(date: forecastDay.date, avgTemp: forecastDay.day.avgtemp_f, maxTemp: forecastDay.day.maxtemp_f, minTemp: forecastDay.day.mintemp_f)
                 
                 let hours = forecastDay.hour.map { hour in
-                    return HoursModel(time: hour.time_epoch, temp: hour.temp_f, condition: hour.condition.text, isCurrent: false)
+                    return HoursModel(time: hour.time_epoch, temp: hour.temp_f, condition: hour.condition.text, conditionCode: hour.condition.code, isCurrent: false)
                 }
                 return ForecastModel(days: day, hours: hours)
             }
@@ -70,6 +70,7 @@ struct WeatherManager {
                 is_day: decodedData.current.is_day,
                 temp: decodedData.current.temp_f,
                 condition: decodedData.current.condition.text,
+                conditionCode: decodedData.current.condition.code,
                 windMph: decodedData.current.wind_mph,
                 feelsLike: decodedData.current.feelslike_f,
                 uv: decodedData.current.uv)

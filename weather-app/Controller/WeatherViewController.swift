@@ -19,7 +19,6 @@ class WeatherViewController: UIViewController {
     private let currentWeatherView: UIView = {
         let currentWeatherView = UIView()
         currentWeatherView.configureUIView()
-        currentWeatherView.backgroundColor = #colorLiteral(red: 0.3450263739, green: 0.4461564422, blue: 0.9987166524, alpha: 1)
         return currentWeatherView
     }()
     
@@ -63,12 +62,12 @@ class WeatherViewController: UIViewController {
     
     private let conditionImageView: UIImageView = {
         let iv = UIImageView()
-        let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
-        iv.image = UIImage(systemName: "sun.max", withConfiguration: config)
+//        let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
+//        iv.image = UIImage(systemName: "sun.max", withConfiguration: config)
         iv.clipsToBounds = true
         iv.sizeToFit()
         iv.contentMode = .scaleAspectFit
-        iv.tintColor = #colorLiteral(red: 1, green: 0.835642755, blue: 0.3751339912, alpha: 1)
+        iv.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         return iv
     }()
     
@@ -179,6 +178,23 @@ class WeatherViewController: UIViewController {
     }
     
     func createCurrentWeatherView() {
+        let backgroundImage = UIImageView(frame: currentWeatherView.bounds)
+        backgroundImage.configureUIView()
+        backgroundImage.clipsToBounds = true
+        backgroundImage.image = #imageLiteral(resourceName: "current-weather-bg")
+        backgroundImage.contentMode = .scaleToFill
+        backgroundImage.translatesAutoresizingMaskIntoConstraints = false
+        currentWeatherView.insertSubview(backgroundImage, at: 0)
+        
+        NSLayoutConstraint.activate([
+            backgroundImage.heightAnchor.constraint(equalToConstant: 175),
+            backgroundImage.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor),
+            backgroundImage.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor),
+            backgroundImage.topAnchor.constraint(equalTo: currentWeatherView.topAnchor),
+            backgroundImage.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor)
+        ])
+        
+        
         let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel ,dateLabel])
         currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         currentWeatherInfoStackView.axis = .vertical
@@ -255,6 +271,10 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.temperatureLabel.text = weather.current.tempString
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
+            self.dateLabel.text = weather.forecast.first?.days.formmattedDay
+            let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
+            self.conditionImageView.image = UIImage(systemName: weather.current.conditionName, withConfiguration: config)
+//            self.conditionName = weather.current.conditionName
             
             if let hours = weather.forecast.first?.hours {
                 self.hoursWeatherArr = hours
