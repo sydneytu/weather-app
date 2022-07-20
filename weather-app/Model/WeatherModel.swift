@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct WeatherModel {
     let cityName: String
@@ -29,6 +30,8 @@ struct CurrentModel {
     var feelsLikeString: String {
         return "Feels Like \(String(format: "%.0f", feelsLike))°"
     }
+    
+    // TODO: format date
 }
 
 struct ForecastModel {
@@ -39,6 +42,25 @@ struct ForecastModel {
 struct DaysModel {
     let date: String
     let avgTemp: Double
+    let maxTemp: Double
+    let minTemp: Double
+    
+    var formmattedDay: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        guard let date = dateFormatter.date(from: date) else { return "" }
+        dateFormatter.dateFormat = "EEEE"
+        let dayOfWeek = dateFormatter.string(from: date)
+        return dayOfWeek
+    }
+    
+    var formmattedMaxTemp: String {
+        return "\(String(format: "%.0f", maxTemp))°"
+    }
+    
+    var formattedMinTemp: String {
+        return "\(String(format: "%.0f", minTemp))°"
+    }
 }
 
 struct HoursModel {

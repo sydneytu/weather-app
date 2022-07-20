@@ -13,20 +13,18 @@ class DailyCell: UITableViewCell {
     private var dayLabel: UILabel = {
         let label = UILabel()
         label.text = "Sunday"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .light)
         label.sizeToFit()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.textColor = .black
         return label
     }()
     
     private var tempLabel: UILabel = {
         let label = UILabel()
-        label.text = "78° 62°"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.text = ""
         label.sizeToFit()
-        label.textAlignment = .center
-        label.textColor = .black
+        label.textAlignment = .left
         return label
     }()
     
@@ -48,9 +46,28 @@ class DailyCell: UITableViewCell {
         return label
     }()
     
-    var day: String?
-    var maxTemp: String?
-    var minTemp: String?
+    var dayOfWeek: String? {
+        didSet {
+            dayLabel.text = "\(dayOfWeek!)"
+        }
+    }
+    
+    
+    var maxTemp: String? {
+        didSet {
+            mutableAttributedTempString.append(maxTemp!.attributedTempString(color: UIColor.black))
+        }
+    }
+    
+    var minTemp: String? {
+        didSet {
+            mutableAttributedTempString.append(minTemp!.attributedTempString(color: UIColor.lightGray))
+            tempLabel.attributedText = mutableAttributedTempString
+        }
+    }
+    
+    var mutableAttributedTempString = NSMutableAttributedString()
+    
     var conditionDesc: String?
     
     // MARK: - Lifecycle
@@ -62,8 +79,7 @@ class DailyCell: UITableViewCell {
         let stackView = UIStackView(arrangedSubviews: [dayLabel, tempLabel, conditionImageView])
         stackView.axis = .horizontal
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = .equalSpacing
-        
+        stackView.distribution = .fillEqually
         addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -72,6 +88,9 @@ class DailyCell: UITableViewCell {
             stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10)
         ])
+        
+        
+
     }
     
     required init?(coder: NSCoder) {

@@ -32,3 +32,14 @@ extension UILabel {
         self.textColor = .white
     }
 }
+
+extension String {
+    func attributedTempString (color: UIColor) -> NSMutableAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: color,
+            .font: UIFont.boldSystemFont(ofSize: 16)
+        ]
+        let attributedString = NSMutableAttributedString(string: self, attributes: attributes)
+        return attributedString
+    }
+}

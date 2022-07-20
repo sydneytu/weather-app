@@ -323,15 +323,20 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UITableViewDatasource
 extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return self.dailyWeatherArr.count
-        return 7
+        return self.dailyWeatherArr.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "dailyCell", for: indexPath) as? DailyCell else {
             fatalError("Unable to dequeue DailyCell")
         }
-//        cell.textLabel?.text = "daily view"
+        if self.dailyWeatherArr.count > 0 {
+            let day = self.dailyWeatherArr[indexPath.row].days
+            cell.dayOfWeek = day.formmattedDay
+            // TODO: format the temperature
+            cell.maxTemp = day.formmattedMaxTemp
+            cell.minTemp = day.formattedMinTemp
+        }
         return cell
     }
 }
