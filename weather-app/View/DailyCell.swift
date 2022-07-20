@@ -20,7 +20,15 @@ class DailyCell: UITableViewCell {
         return label
     }()
     
-    private var tempLabel: UILabel = {
+    private var maxTempLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.sizeToFit()
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private var minTempLabel: UILabel = {
         let label = UILabel()
         label.text = ""
         label.sizeToFit()
@@ -55,18 +63,15 @@ class DailyCell: UITableViewCell {
     
     var maxTemp: String? {
         didSet {
-            mutableAttributedTempString.append(maxTemp!.attributedTempString(color: UIColor.black))
+            maxTempLabel.attributedText = maxTemp!.attributedTempString(color: UIColor.black)
         }
     }
     
     var minTemp: String? {
         didSet {
-            mutableAttributedTempString.append(minTemp!.attributedTempString(color: UIColor.lightGray))
-            tempLabel.attributedText = mutableAttributedTempString
+            minTempLabel.attributedText = minTemp!.attributedTempString(color: UIColor.lightGray)
         }
     }
-    
-    var mutableAttributedTempString = NSMutableAttributedString()
     
     var conditionDesc: String?
     
@@ -76,7 +81,13 @@ class DailyCell: UITableViewCell {
         
         backgroundColor = UIColor.black.withAlphaComponent(0)
         
-        let stackView = UIStackView(arrangedSubviews: [dayLabel, tempLabel, conditionImageView])
+        let tempStackView = UIStackView(arrangedSubviews: [maxTempLabel, minTempLabel])
+        tempStackView.axis = .horizontal
+        tempStackView.translatesAutoresizingMaskIntoConstraints = false
+        tempStackView.distribution = .fillEqually
+        
+        
+        let stackView = UIStackView(arrangedSubviews: [dayLabel, tempStackView, conditionImageView])
         stackView.axis = .horizontal
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillEqually
