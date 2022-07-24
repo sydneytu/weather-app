@@ -41,11 +41,11 @@ struct CurrentModel {
         case 1006: // Cloudy
             return "cloud.fill"
         case 1009: // Overcast
-            return ""
+            return "cloud.sun.fill"
         case 1030: // Mist
-            return ""
+            return "cloud.fog.fill"
         case 1063: // Patchy Rain possible
-            return ""
+            return "cloud.drizzle.fill"
         default:
             return ""
         }
@@ -62,6 +62,7 @@ struct DaysModel {
     let avgTemp: Double
     let maxTemp: Double
     let minTemp: Double
+    let conditionCode: Int
     
     var formmattedDay: String {
         let dateFormatter = DateFormatter()
@@ -78,6 +79,25 @@ struct DaysModel {
     
     var formattedMinTemp: String {
         return "\(String(format: "%.0f", minTemp))°"
+    }
+    
+    var conditionName: String {
+        switch conditionCode {
+        case 1000: // Sunny, Clear
+            return "sun.max"
+        case 1003: // Partly Cloudy
+            return "cloud.sun"
+        case 1006: // Cloudy
+            return "cloud"
+        case 1009: // Overcast
+            return "cloud.sun"
+        case 1030: // Mist
+            return "cloud.fog"
+        case 1063: // Patchy Rain possible
+            return "cloud.drizzle"
+        default:
+            return ""
+        }
     }
 }
 
@@ -105,4 +125,24 @@ struct HoursModel {
         dateFormatter.dateFormat = "HH"
         return Int(dateFormatter.string(from: timeString))!
     }
+    
+    var conditionName: String {
+        switch conditionCode {
+        case 1000: // Sunny, Clear
+            return "sun.max"
+        case 1003: // Partly Cloudy
+            return "cloud.sun"
+        case 1006: // Cloudy
+            return "cloud"
+        case 1009: // Overcast
+            return "cloud.sun"
+        case 1030: // Mist
+            return "cloud.fog"
+        case 1063: // Patchy Rain possible
+            return "cloud.drizzle"
+        default:
+            return ""
+        }
+    }
+    
 }

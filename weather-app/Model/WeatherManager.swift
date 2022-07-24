@@ -58,7 +58,7 @@ struct WeatherManager {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
             
             let forecast = decodedData.forecast.forecastday.map { forecastDay -> ForecastModel in
-                let day  = DaysModel(date: forecastDay.date, avgTemp: forecastDay.day.avgtemp_f, maxTemp: forecastDay.day.maxtemp_f, minTemp: forecastDay.day.mintemp_f)
+                let day  = DaysModel(date: forecastDay.date, avgTemp: forecastDay.day.avgtemp_f, maxTemp: forecastDay.day.maxtemp_f, minTemp: forecastDay.day.mintemp_f, conditionCode: forecastDay.day.condition.code)
                 
                 let hours = forecastDay.hour.map { hour in
                     return HoursModel(time: hour.time_epoch, temp: hour.temp_f, condition: hour.condition.text, conditionCode: hour.condition.code, isCurrent: false)

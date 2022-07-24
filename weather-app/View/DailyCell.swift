@@ -38,20 +38,11 @@ class DailyCell: UITableViewCell {
     
     private let conditionImageView: UIImageView = {
         let iv = UIImageView()
-        let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .light)
-        iv.image = UIImage(systemName: "cloud.sun.rain", withConfiguration: config)
         iv.clipsToBounds = true
         iv.sizeToFit()
         iv.contentMode = .scaleAspectFit
         iv.tintColor = #colorLiteral(red: 0.4643017054, green: 0.4716814756, blue: 0.4766219258, alpha: 1)
         return iv
-    }()
-    
-    private let conditionDescLabel: UILabel = {
-        let label = UILabel()
-        label.configureLabel(size: 18, weight: .light, text: "Partly Cloudy")
-        label.textColor = .darkGray
-        return label
     }()
     
     var dayOfWeek: String? {
@@ -72,7 +63,14 @@ class DailyCell: UITableViewCell {
         }
     }
     
-    var conditionDesc: String?
+    var conditionName: String? {
+        didSet {
+            if let conditionName = conditionName {
+                let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .light)
+                self.conditionImageView.image = UIImage(systemName: conditionName, withConfiguration: config)
+            }
+        }
+    }
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

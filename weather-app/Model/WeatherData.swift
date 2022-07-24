@@ -47,6 +47,7 @@ struct Day: Codable {
     let avgtemp_f: Double
     let maxtemp_f: Double
     let mintemp_f: Double
+    let condition: Condition
 }
 
 struct Hour: Codable {

@@ -31,6 +31,15 @@ class HourCell: UICollectionViewCell {
         return label
     }()
     
+    private let conditionImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.clipsToBounds = true
+        iv.sizeToFit()
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = #colorLiteral(red: 0.4643017054, green: 0.4716814756, blue: 0.4766219258, alpha: 1)
+        return iv
+    }()
+    
     var time: String? {
         didSet {
             timeLabel.text = "\(time!)"
@@ -49,11 +58,20 @@ class HourCell: UICollectionViewCell {
                 backgroundColor = #colorLiteral(red: 0.3450263739, green: 0.4461564422, blue: 0.9987166524, alpha: 1)
                 tempLabel.textColor = .white
                 timeLabel.textColor = .white
+                conditionImageView.tintColor = .white
+                conditionName?.append(".fill")
             }
         }
     }
     
-    // image
+    var conditionName: String? {
+        didSet {
+            if let conditionName = conditionName {
+                let config = UIImage.SymbolConfiguration(pointSize: 32, weight: .light)
+                self.conditionImageView.image = UIImage(systemName: conditionName, withConfiguration: config)
+            }
+        }
+    }
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -61,7 +79,7 @@ class HourCell: UICollectionViewCell {
         backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         layer.cornerRadius = 25
         
-        let stackView = UIStackView(arrangedSubviews: [timeLabel, tempLabel])
+        let stackView = UIStackView(arrangedSubviews: [timeLabel, conditionImageView ,tempLabel])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = 5
@@ -86,6 +104,7 @@ class HourCell: UICollectionViewCell {
         backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         tempLabel.textColor = .black
         timeLabel.textColor = .black
+        conditionImageView.tintColor = #colorLiteral(red: 0.4643017054, green: 0.4716814756, blue: 0.4766219258, alpha: 1)
     }
     
     // MARK: - Actions

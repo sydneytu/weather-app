@@ -272,9 +272,9 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
             self.dateLabel.text = weather.forecast.first?.days.formmattedDay
+            
             let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
             self.conditionImageView.image = UIImage(systemName: weather.current.conditionName, withConfiguration: config)
-//            self.conditionName = weather.current.conditionName
             
             if let hours = weather.forecast.first?.hours {
                 self.hoursWeatherArr = hours
@@ -324,7 +324,7 @@ extension WeatherViewController: UICollectionViewDataSource {
             var hour = self.hoursWeatherArr[indexPath.item]
             cell.temp = hour.formattedTemp
             cell.time = hour.formattedTime
-
+            cell.conditionName = hour.conditionName
             hour.isCurrent = isCurrentTime(cellTime: hour.timeAsHour) ? true : false
             cell.isCurrentCell = hour.isCurrent
         }
@@ -353,9 +353,9 @@ extension WeatherViewController: UITableViewDataSource {
         if self.dailyWeatherArr.count > 0 {
             let day = self.dailyWeatherArr[indexPath.row].days
             cell.dayOfWeek = day.formmattedDay
-            // TODO: format the temperature
             cell.maxTemp = day.formmattedMaxTemp
             cell.minTemp = day.formattedMinTemp
+            cell.conditionName = day.conditionName
         }
         return cell
     }
