@@ -13,6 +13,10 @@ struct WeatherModel {
     let region: String
     let current: CurrentModel
     let forecast: [ForecastModel]
+    
+    var locationString: String {
+        return "\(cityName), \(region)"
+    }
 }
 
 struct CurrentModel {

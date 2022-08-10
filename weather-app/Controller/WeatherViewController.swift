@@ -37,7 +37,7 @@ class WeatherViewController: UIViewController {
     
     private let cityLabel: UILabel = {
         let cityLabel = UILabel()
-        cityLabel.configureLabel(size: 20, weight: .regular, text: "Los Angeles, CA")
+        cityLabel.configureLabel(size: 20, weight: .regular, text: "")
         cityLabel.textColor = .black
         return cityLabel
     }()
@@ -62,8 +62,6 @@ class WeatherViewController: UIViewController {
     
     private let conditionImageView: UIImageView = {
         let iv = UIImageView()
-//        let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
-//        iv.image = UIImage(systemName: "sun.max", withConfiguration: config)
         iv.clipsToBounds = true
         iv.sizeToFit()
         iv.contentMode = .scaleAspectFit
@@ -87,11 +85,12 @@ class WeatherViewController: UIViewController {
     }()
     
     private let searchButton: UIButton = {
-       let searchButton = UIButton()
-        searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        searchButton.sizeToFit()
-        searchButton.tintColor = .black
-        return searchButton
+       let bt = UIButton()
+        bt.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        bt.sizeToFit()
+        bt.tintColor = .black
+        bt.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
+        return bt
     }()
     
     private var hourlyCollectionView: UICollectionView = {
@@ -138,6 +137,13 @@ class WeatherViewController: UIViewController {
     // MARK: - Actions
     @objc func userLocationButtonPressed() {
         locationManager.requestLocation()
+    }
+    
+    // TODO: change name of function to something about going to next screen (show up)
+    @objc func searchButtonPressed() {
+        let controller = SearchController()
+        controller.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+        present(controller, animated: true)
     }
     
     // MARK: - Helpers
@@ -267,7 +273,7 @@ class WeatherViewController: UIViewController {
 extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         DispatchQueue.main.async {
-            self.cityLabel.text = "\(weather.cityName)"
+            self.cityLabel.text = "\(weather.locationString)"
             self.temperatureLabel.text = weather.current.tempString
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
