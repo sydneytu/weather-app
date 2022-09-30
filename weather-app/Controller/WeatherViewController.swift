@@ -141,6 +141,7 @@ class WeatherViewController: UIViewController {
     
     // TODO: change name of function to something about going to next screen (show up)
     @objc func searchButtonPressed() {
+        print("pressed")
         let controller = SearchController()
         controller.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         present(controller, animated: true)

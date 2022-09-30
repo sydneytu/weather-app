@@ -38,14 +38,14 @@ struct CurrentModel {
     
     var conditionName: String {
         switch conditionCode {
-        case 1000: // Sunny, Clear
+        case 1000 where is_day == 1: // Sunny
             return "sun.max.fill"
-        case 1003: // Partly Cloudy
+        case 1000 where is_day == 0: // Clear
+            return "moon.fill"
+        case 1003 where is_day == 1, 1009 where is_day == 1: // Partly Cloudy, Overcast
             return "cloud.sun.fill"
         case 1006: // Cloudy
             return "cloud.fill"
-        case 1009: // Overcast
-            return "cloud.sun.fill"
         case 1030: // Mist
             return "cloud.fog.fill"
         case 1063: // Patchy Rain possible
@@ -108,6 +108,7 @@ struct DaysModel {
 struct HoursModel {
     let time: Int
     let temp: Double
+    let is_day: Int
     let condition: String
     let conditionCode: Int
     var isCurrent: Bool
@@ -129,10 +130,24 @@ struct HoursModel {
         dateFormatter.dateFormat = "HH"
         return Int(dateFormatter.string(from: timeString))!
     }
-    
+
+    //case 1000 where is_day == 1: // Sunny
+    //    return "sun.max.fill"
+    //case 1000 where is_day == 0: // Clear
+    //    return "moon.fill"
+    //case 1003 where is_day == 1, 1009 where is_day == 1: // Partly Cloudy, Overcast
+    //    return "cloud.sun.fill"
+    //case 1006: // Cloudy
+    //    return "cloud.fill"
+    //case 1030: // Mist
+    //    return "cloud.fog.fill"
+    //case 1063: // Patchy Rain possible
+    //    return "cloud.drizzle.fill"
+    //default:
+    //    return ""
     var conditionName: String {
         switch conditionCode {
-        case 1000: // Sunny, Clear
+        case 1000 where is_day == 1: // Sunny, Clear
             return "sun.max"
         case 1003: // Partly Cloudy
             return "cloud.sun"

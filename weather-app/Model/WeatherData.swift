@@ -53,5 +53,6 @@ struct Day: Codable {
 struct Hour: Codable {
     let time_epoch: Int
     let temp_f: Double
+    let is_day: Int
     let condition: Condition
 }
