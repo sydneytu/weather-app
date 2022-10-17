@@ -35,7 +35,7 @@ struct CurrentModel {
     var feelsLikeString: String {
         return "Feels Like \(String(format: "%.0f", feelsLike))°"
     }
-    
+        
     var conditionName: String {
         switch conditionCode {
         case 1000 where is_day == 1: // Sunny
@@ -44,12 +44,20 @@ struct CurrentModel {
             return "moon.fill"
         case 1003 where is_day == 1, 1009 where is_day == 1: // Partly Cloudy, Overcast
             return "cloud.sun.fill"
-        case 1006: // Cloudy
+        case 1003 where is_day == 0, 1006 where is_day == 0, 1009 where is_day == 0: // Partly Cloudy, Overcast, Cloudy
+            return "cloud.moon.fill"
+        case 1006 where is_day == 1: // Cloudy
             return "cloud.fill"
         case 1030: // Mist
             return "cloud.fog.fill"
-        case 1063: // Patchy Rain possible
+        case 1063, 1150, 1153: // Patchy Rain possible, patch light drizzlw
             return "cloud.drizzle.fill"
+        case 1183, 1240, 1180: // Light Rain, Light Rain shower, Patchy Light Rain
+            return "cloud.rain.fill"
+        case 1195, 1243, 1186, 1189, 1192: // Heavy Rain, Moderate or heavy rain shower, Moderate rain
+            return "cloud.heavyrain.fill"
+        case 1135: // Fog
+            return "cloud.fog.fill"
         default:
             return ""
         }
@@ -87,18 +95,22 @@ struct DaysModel {
     
     var conditionName: String {
         switch conditionCode {
-        case 1000: // Sunny, Clear
+        case 1000: // Sunny
             return "sun.max"
-        case 1003: // Partly Cloudy
+        case 1003, 1009: // Partly Cloudy, Overcast
             return "cloud.sun"
         case 1006: // Cloudy
             return "cloud"
-        case 1009: // Overcast
-            return "cloud.sun"
         case 1030: // Mist
             return "cloud.fog"
-        case 1063: // Patchy Rain possible
+        case 1063, 1150, 1153: // Patchy Rain possible, patch light drizzlw
             return "cloud.drizzle"
+        case 1183, 1240, 1180: // Light Rain, Light Rain shower, Patchy Light Rain
+            return "cloud.rain"
+        case 1195, 1243, 1186, 1189, 1192: // Heavy Rain, Moderate or heavy rain shower, Moderate rain
+            return "cloud.heavyrain"
+        case 1135: // Fog
+            return "cloud.fog"
         default:
             return ""
         }
@@ -131,34 +143,28 @@ struct HoursModel {
         return Int(dateFormatter.string(from: timeString))!
     }
 
-    //case 1000 where is_day == 1: // Sunny
-    //    return "sun.max.fill"
-    //case 1000 where is_day == 0: // Clear
-    //    return "moon.fill"
-    //case 1003 where is_day == 1, 1009 where is_day == 1: // Partly Cloudy, Overcast
-    //    return "cloud.sun.fill"
-    //case 1006: // Cloudy
-    //    return "cloud.fill"
-    //case 1030: // Mist
-    //    return "cloud.fog.fill"
-    //case 1063: // Patchy Rain possible
-    //    return "cloud.drizzle.fill"
-    //default:
-    //    return ""
     var conditionName: String {
         switch conditionCode {
-        case 1000 where is_day == 1: // Sunny, Clear
+        case 1000 where is_day == 1: // Sunny
             return "sun.max"
-        case 1003: // Partly Cloudy
+        case 1000 where is_day == 0: // Clear
+            return "moon"
+        case 1003 where is_day == 1, 1009 where is_day == 1: // Partly Cloudy, Overcast
             return "cloud.sun"
-        case 1006: // Cloudy
+        case 1003 where is_day == 0, 1006 where is_day == 0, 1009 where is_day == 0: // Partly Cloudy, Overcast, Cloudy
+            return "cloud.moon"
+        case 1006 where is_day == 1: // Cloudy
             return "cloud"
-        case 1009: // Overcast
-            return "cloud.sun"
         case 1030: // Mist
             return "cloud.fog"
-        case 1063: // Patchy Rain possible
+        case 1063, 1150, 1153: // Patchy Rain possible, patch light drizzlw
             return "cloud.drizzle"
+        case 1183, 1240, 1180: // Light Rain, Light Rain shower, Patchy Light Rain
+            return "cloud.rain"
+        case 1195, 1243, 1186, 1189, 1192: // Heavy Rain, Moderate or heavy rain shower, Moderate rain
+            return "cloud.heavyrain"
+        case 1135: // Fog
+            return "cloud.fog"
         default:
             return ""
         }

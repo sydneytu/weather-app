@@ -115,6 +115,8 @@ class WeatherViewController: UIViewController {
     var dailyWeatherArr = [ForecastModel]()
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
+//    let searchResultsController = SearchResultsController()
+    let searchController = UISearchController(searchResultsController: SearchResultsController())
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -126,6 +128,11 @@ class WeatherViewController: UIViewController {
         hourlyCollectionView.delegate = self
         dailyTableView.dataSource = self
         dailyTableView.delegate = self
+        searchController.searchResultsUpdater = self
+//        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Enter city"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
         
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
@@ -141,10 +148,9 @@ class WeatherViewController: UIViewController {
     
     // TODO: change name of function to something about going to next screen (show up)
     @objc func searchButtonPressed() {
-        print("pressed")
-        let controller = SearchController()
-        controller.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-        present(controller, animated: true)
+//        let controller = UISearchController(searchResultsController: nil)
+//        controller.modalPresentationStyle = UIModalPresentationStyle.popover
+        present(searchController, animated: true)
     }
     
     // MARK: - Helpers
@@ -281,7 +287,7 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.dateLabel.text = weather.forecast.first?.days.formmattedDay
             
             let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
-            self.conditionImageView.image = UIImage(systemName: weather.current.conditionName, withConfiguration: config)
+            self.conditionImageView.image = UIImage(systemName: getConditionName(weather.current.conditionCode, weather.current.is_day, withFill: true), withConfiguration: config)
             
             if let hours = weather.forecast.first?.hours {
                 self.hoursWeatherArr = hours
@@ -373,4 +379,14 @@ extension WeatherViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // do nothing
     }
+}
+
+// MARK: - UISearchResultsUpdating
+extension WeatherViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        print(text)
+    }
+    
+    
 }
