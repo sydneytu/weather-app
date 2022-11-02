@@ -35,13 +35,6 @@ class WeatherViewController: UIViewController {
         return dailyWeatherView
     }()
     
-    private let cityLabel: UILabel = {
-        let cityLabel = UILabel()
-        cityLabel.configureLabel(size: 20, weight: .regular, text: "")
-        cityLabel.textColor = .black
-        return cityLabel
-    }()
-    
     private let temperatureLabel: UILabel = {
         let temperatureLabel = UILabel()
         temperatureLabel.configureLabel(size: 72, weight: .light, text: "78°")
@@ -73,24 +66,6 @@ class WeatherViewController: UIViewController {
         let label = UILabel()
         label.configureLabel(size: 18, weight: .light, text: "Partly Cloudy")
         return label
-    }()
-    
-    private let currentLocationButton: UIButton = {
-       let bt = UIButton()
-        bt.setImage(UIImage(systemName: "location"), for: .normal)
-        bt.sizeToFit()
-        bt.tintColor = .black
-        bt.addTarget(self, action: #selector(userLocationButtonPressed), for: .touchUpInside)
-        return bt
-    }()
-    
-    private let searchButton: UIButton = {
-       let bt = UIButton()
-        bt.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        bt.sizeToFit()
-        bt.tintColor = .black
-        bt.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
-        return bt
     }()
     
     private var hourlyCollectionView: UICollectionView = {
@@ -128,10 +103,16 @@ class WeatherViewController: UIViewController {
         hourlyCollectionView.delegate = self
         dailyTableView.dataSource = self
         dailyTableView.delegate = self
+        
         searchController.searchResultsUpdater = self
-//        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = true
         searchController.searchBar.placeholder = "Enter city"
-        navigationItem.searchController = searchController
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "location"), style: .plain, target: self, action: #selector(userLocationButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonPressed))
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .regular)]
+
         definesPresentationContext = true
         
         locationManager.requestWhenInUseAuthorization()
@@ -160,16 +141,8 @@ class WeatherViewController: UIViewController {
         createHourlyWeatherView()
         createDailyWeatherView()
         
-        // searchView
-        let searchStackView = UIStackView(arrangedSubviews: [currentLocationButton, cityLabel, searchButton])
-        searchStackView.translatesAutoresizingMaskIntoConstraints = false
-        searchStackView.axis = .horizontal
-        searchStackView.distribution = .equalSpacing
-        searchStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        searchStackView.isLayoutMarginsRelativeArrangement = true
-        
         // mainStackView
-        let mainStackView = UIStackView(arrangedSubviews: [searchStackView, currentWeatherView, hourlyWeatherView, dailyWeatherView])
+        let mainStackView = UIStackView(arrangedSubviews: [currentWeatherView, hourlyWeatherView, dailyWeatherView])
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.axis = .vertical
         mainStackView.spacing = 10
@@ -280,7 +253,7 @@ class WeatherViewController: UIViewController {
 extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         DispatchQueue.main.async {
-            self.cityLabel.text = "\(weather.locationString)"
+            self.navigationItem.title = "\(weather.locationString)"
             self.temperatureLabel.text = weather.current.tempString
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
