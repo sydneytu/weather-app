@@ -7,7 +7,12 @@
 
 import Foundation
 
-
+enum ConditionName {
+    case sunny
+    case cloudy
+    case clear
+    case overcast
+}
 
 func getConditionName(_ conditionCode: Int, _ is_day: Int, withFill: Bool) -> String {
     var conditionName: String {

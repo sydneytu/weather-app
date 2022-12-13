@@ -26,6 +26,7 @@ struct Current: Codable {
     let humidity: Double
     let feelslike_f: Double
     let uv: Double
+    let vis_miles: Double
 }
 
 struct Condition: Codable {

@@ -86,11 +86,43 @@ class WeatherViewController: UIViewController {
         return tv
     }()
     
+    private var otherInfoView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    private let uvIndexLabel: UILabel = {
+        let label = UILabel()
+        label.configureLabel(size: 20, weight: .regular, text: "1")
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private let windMphLabel: UILabel = {
+        let label = UILabel()
+        label.configureLabel(size: 20, weight: .regular, text: "2.2 m/h")
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private let humidityLabel: UILabel = {
+        let label = UILabel()
+        label.configureLabel(size: 20, weight: .regular, text: "55%")
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private let visibilityLabel: UILabel = {
+        let label = UILabel()
+        label.configureLabel(size: 20, weight: .regular, text: "9 mi")
+        label.textAlignment = .center
+        return label
+    }()
+    
     var hoursWeatherArr = [HoursModel]()
     var dailyWeatherArr = [ForecastModel]()
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
-//    let searchResultsController = SearchResultsController()
     let searchController = UISearchController(searchResultsController: SearchResultsController())
 
     // MARK: - Lifecycle
@@ -129,8 +161,6 @@ class WeatherViewController: UIViewController {
     
     // TODO: change name of function to something about going to next screen (show up)
     @objc func searchButtonPressed() {
-//        let controller = UISearchController(searchResultsController: nil)
-//        controller.modalPresentationStyle = UIModalPresentationStyle.popover
         present(searchController, animated: true)
     }
     
@@ -142,7 +172,7 @@ class WeatherViewController: UIViewController {
         createDailyWeatherView()
         
         // mainStackView
-        let mainStackView = UIStackView(arrangedSubviews: [currentWeatherView, hourlyWeatherView, dailyWeatherView])
+        let mainStackView = UIStackView(arrangedSubviews: [currentWeatherView,hourlyWeatherView, dailyWeatherView])
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.axis = .vertical
         mainStackView.spacing = 10
@@ -173,16 +203,16 @@ class WeatherViewController: UIViewController {
         currentWeatherView.insertSubview(backgroundImage, at: 0)
         
         NSLayoutConstraint.activate([
-            backgroundImage.heightAnchor.constraint(equalToConstant: 175),
+            backgroundImage.heightAnchor.constraint(equalToConstant: 250),
             backgroundImage.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor),
             backgroundImage.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor),
             backgroundImage.topAnchor.constraint(equalTo: currentWeatherView.topAnchor),
             backgroundImage.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor)
         ])
         
-        
-        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel ,dateLabel])
+        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel, dateLabel])
         currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+        currentWeatherInfoStackView.setCustomSpacing(10.0, after: temperatureLabel)
         currentWeatherInfoStackView.axis = .vertical
         
         let conditionStackView = UIStackView(arrangedSubviews: [conditionImageView, conditionDescLabel])
@@ -194,13 +224,26 @@ class WeatherViewController: UIViewController {
         currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
         currentWeatherStackView.axis = .horizontal
         currentWeatherStackView.distribution = .equalSpacing
-        currentWeatherView.addSubview(currentWeatherStackView)
+        
+        createOtherInfoView()
+//        let separator = UIView()
+//        separator.translatesAutoresizingMaskIntoConstraints = false
+//        separator.backgroundColor = .white
+        
+        let stackView = UIStackView(arrangedSubviews: [currentWeatherStackView, otherInfoView])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fillProportionally
+        currentWeatherView.addSubview(stackView)
+        
+        stackView.setCustomSpacing(20.0, after: currentWeatherStackView)
         
         NSLayoutConstraint.activate([
-            currentWeatherStackView.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor, constant: 20),
-            currentWeatherStackView.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor, constant: -20),
-            currentWeatherStackView.topAnchor.constraint(equalTo: currentWeatherView.topAnchor, constant: 10),
-            currentWeatherStackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -10)
+            stackView.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor, constant: -20),
+            stackView.topAnchor.constraint(equalTo: currentWeatherView.topAnchor, constant: 10),
+            stackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -10),
+//            separator.heightAnchor.constraint(equalToConstant: 1)
         ])
     }
     
@@ -233,6 +276,50 @@ class WeatherViewController: UIViewController {
         ])
     }
     
+    func createOtherInfoView() {
+        otherInfoView.translatesAutoresizingMaskIntoConstraints = false
+        let uvTextLabel = UILabel()
+        uvTextLabel.configureLabel(size: 12, weight: .regular, text: "UV Index")
+        uvTextLabel.textAlignment = .center
+        uvTextLabel.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        let uvView = UIStackView(arrangedSubviews: [uvIndexLabel, uvTextLabel])
+        uvView.axis = .vertical
+        
+        let visibilityTextLabel = UILabel()
+        visibilityTextLabel.configureLabel(size: 12, weight: .regular, text: "Visibility")
+        visibilityTextLabel.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        visibilityTextLabel.textAlignment = .center
+        let visibilityView = UIStackView(arrangedSubviews: [visibilityLabel, visibilityTextLabel])
+        visibilityView.axis = .vertical
+        
+        let humidityTextLabel = UILabel()
+        humidityTextLabel.configureLabel(size: 12, weight: .regular, text: "Humidity")
+        humidityTextLabel.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        humidityTextLabel.textAlignment = .center
+        let humidityView = UIStackView(arrangedSubviews: [humidityLabel, humidityTextLabel])
+        humidityView.axis = .vertical
+        
+        let windMphTextLabel = UILabel()
+        windMphTextLabel.configureLabel(size: 12, weight: .regular, text: "Wind")
+        windMphTextLabel.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        windMphTextLabel.textAlignment = .center
+        let windMphView = UIStackView(arrangedSubviews: [windMphLabel, windMphTextLabel])
+        windMphView.axis = .vertical
+        
+        let view = UIStackView(arrangedSubviews: [uvView, visibilityView, windMphView, humidityView])
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .horizontal
+        view.distribution = .fillEqually
+        otherInfoView.addSubview(view)
+        
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: otherInfoView.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: otherInfoView.trailingAnchor),
+            view.topAnchor.constraint(equalTo: otherInfoView.topAnchor),
+            view.bottomAnchor.constraint(equalTo: otherInfoView.bottomAnchor)
+        ])
+    }
+    
     func time24() -> Int {
         let time = Date()
         let timeFormatter = DateFormatter()
@@ -258,6 +345,7 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
             self.dateLabel.text = weather.forecast.first?.days.formmattedDay
+            self.uvIndexLabel.text = weather.current.uvIndexString
             
             let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
             self.conditionImageView.image = UIImage(systemName: getConditionName(weather.current.conditionCode, weather.current.is_day, withFill: true), withConfiguration: config)
@@ -358,7 +446,7 @@ extension WeatherViewController: UITableViewDelegate {
 extension WeatherViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
-        print(text)
+        weatherManager.fetchSearches(input: text)
     }
     
     

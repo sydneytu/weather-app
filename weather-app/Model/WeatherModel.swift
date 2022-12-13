@@ -27,6 +27,7 @@ struct CurrentModel {
     let windMph: Double
     let feelsLike: Double
     let uv: Double
+    let visibility: Double
     
     var tempString: String {
         return "\(String(format: "%.0f", temp))°"
@@ -34,6 +35,10 @@ struct CurrentModel {
     
     var feelsLikeString: String {
         return "Feels Like \(String(format: "%.0f", feelsLike))°"
+    }
+    
+    var uvIndexString: String {
+        return "\(uv)"
     }
         
     var conditionName: String {

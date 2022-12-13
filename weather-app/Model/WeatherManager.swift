@@ -17,8 +17,9 @@ struct WeatherManager {
     let baseURL = "https://api.weatherapi.com/v1"
     let currentMethod = "/current.json"
     let forecastMethod = "/forecast.json"
+    let searchMethod = "/search.json"
     let API_KEY = WeatherMapApiKey
-    let numDays = 5
+    let numDays = 3
     
     var delegate: WeatherManagerDelegate?
     
@@ -73,7 +74,8 @@ struct WeatherManager {
                 conditionCode: decodedData.current.condition.code,
                 windMph: decodedData.current.wind_mph,
                 feelsLike: decodedData.current.feelslike_f,
-                uv: decodedData.current.uv)
+                uv: decodedData.current.uv,
+                visibility: decodedData.current.vis_miles)
             let weather = WeatherModel(
                 cityName: decodedData.location.name,
                 region: decodedData.location.region,
@@ -86,4 +88,47 @@ struct WeatherManager {
             return nil
         }
     }
+    
+    func fetchSearches(input: String) {
+        let urlString = "\(baseURL)\(searchMethod)?key=\(API_KEY)=\(input)"
+        performSearchRequest(with: urlString)
+    }
+    
+    func performSearchRequest(with urlString: String) {
+        if let url = URL(string: urlString) {
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { data, response, error in
+                if error != nil {
+                    print("error")
+                    self.delegate?.didFailWithError(error: error!)
+                    return
+                }
+                if let safeData = data {
+                    print("here")
+//                    if let results = self.parseSearchJSON(safeData) {
+                        // populate search results page
+//                    }
+                }
+            }
+            task.resume()
+            
+        }
+    }
+    
+//    func parseSearchJSON(_ searchData: Data) -> SearchModel? {
+//        let decoder = JSONDecoder()
+//        do {
+//            let decodedData = try decoder.decode(Searches.self, from: searchData)
+//            let results = decodedData. { result ->
+//                SearchResultsModel in
+//                print(result.name, result.region)
+////                return SearchResultsModel(name: result.name, region: result.region, lat: result.lat, lon: result.lon)
+//            }
+////            return SearchModel(searchResults: results)
+//        }
+//        catch {
+//            delegate?.didFailWithError(error: error)
+//            return nil
+//        }
+//    }
 }

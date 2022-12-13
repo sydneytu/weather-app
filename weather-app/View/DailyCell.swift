@@ -76,6 +76,7 @@ class DailyCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.selectionStyle = UITableViewCell.SelectionStyle.none
         backgroundColor = UIColor.black.withAlphaComponent(0)
         
         let tempStackView = UIStackView(arrangedSubviews: [maxTempLabel, minTempLabel])
