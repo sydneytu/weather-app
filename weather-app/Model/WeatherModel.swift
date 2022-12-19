@@ -112,7 +112,7 @@ struct DaysModel {
             return "cloud.drizzle"
         case 1183, 1240, 1180: // Light Rain, Light Rain shower, Patchy Light Rain
             return "cloud.rain"
-        case 1195, 1243, 1186, 1189, 1192: // Heavy Rain, Moderate or heavy rain shower, Moderate rain
+        case 1195, 1243, 1186, 1189, 1192, 1258: // Heavy Rain, Moderate or heavy rain shower, Moderate rain
             return "cloud.heavyrain"
         case 1135: // Fog
             return "cloud.fog"
@@ -166,7 +166,7 @@ struct HoursModel {
             return "cloud.drizzle"
         case 1183, 1240, 1180: // Light Rain, Light Rain shower, Patchy Light Rain
             return "cloud.rain"
-        case 1195, 1243, 1186, 1189, 1192: // Heavy Rain, Moderate or heavy rain shower, Moderate rain
+        case 1195, 1243, 1186, 1189, 1192, 1258: // Heavy Rain, Moderate or heavy rain shower, Moderate rain
             return "cloud.heavyrain"
         case 1135: // Fog
             return "cloud.fog"

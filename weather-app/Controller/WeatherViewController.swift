@@ -37,18 +37,22 @@ class WeatherViewController: UIViewController {
     
     private let temperatureLabel: UILabel = {
         let temperatureLabel = UILabel()
-        temperatureLabel.configureLabel(size: 72, weight: .light, text: "78°")
+        temperatureLabel.textAlignment = .center
+        temperatureLabel.configureLabel(size: 84, weight: .light, text: "78°")
         return temperatureLabel
     }()
     
     private let dateLabel: UILabel = {
        let dateLabel = UILabel()
-        dateLabel.configureLabel(size: 18, weight: .light, text: "May 8")
+        dateLabel.textAlignment = .center
+        dateLabel.configureLabel(size: 14, weight: .regular, text: "May 8")
+        dateLabel.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         return dateLabel
     }()
     
     private let feelsLikeLabel: UILabel = {
         let label = UILabel()
+        label.textAlignment = .center
         label.configureLabel(size: 18, weight: .light, text: "Feels Like 75°")
         return label
     }()
@@ -64,7 +68,8 @@ class WeatherViewController: UIViewController {
     
     private let conditionDescLabel: UILabel = {
         let label = UILabel()
-        label.configureLabel(size: 18, weight: .light, text: "Partly Cloudy")
+        label.textAlignment = .center
+        label.configureLabel(size: 18, weight: .regular, text: "Partly Cloudy")
         return label
     }()
     
@@ -203,40 +208,41 @@ class WeatherViewController: UIViewController {
         currentWeatherView.insertSubview(backgroundImage, at: 0)
         
         NSLayoutConstraint.activate([
-            backgroundImage.heightAnchor.constraint(equalToConstant: 250),
+            backgroundImage.heightAnchor.constraint(equalToConstant: 425),
             backgroundImage.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor),
             backgroundImage.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor),
             backgroundImage.topAnchor.constraint(equalTo: currentWeatherView.topAnchor),
             backgroundImage.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor)
         ])
         
-        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel, dateLabel])
-        currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
-        currentWeatherInfoStackView.setCustomSpacing(10.0, after: temperatureLabel)
-        currentWeatherInfoStackView.axis = .vertical
+//        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel, dateLabel])
+//        currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+//        currentWeatherInfoStackView.setCustomSpacing(10.0, after: temperatureLabel)
+//        currentWeatherInfoStackView.axis = .vertical
         
-        let conditionStackView = UIStackView(arrangedSubviews: [conditionImageView, conditionDescLabel])
+        let conditionStackView = UIStackView(arrangedSubviews: [conditionImageView, conditionDescLabel, dateLabel, temperatureLabel])
         conditionStackView.translatesAutoresizingMaskIntoConstraints = false
         conditionStackView.axis = .vertical
         conditionStackView.distribution = .fillProportionally
+        conditionStackView.setCustomSpacing(-30.0, after: dateLabel)
         
-        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionStackView])
-        currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
-        currentWeatherStackView.axis = .horizontal
-        currentWeatherStackView.distribution = .equalSpacing
+//        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionStackView])
+//        currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
+//        currentWeatherStackView.axis = .horizontal
+//        currentWeatherStackView.distribution = .equalSpacing
         
         createOtherInfoView()
 //        let separator = UIView()
 //        separator.translatesAutoresizingMaskIntoConstraints = false
 //        separator.backgroundColor = .white
         
-        let stackView = UIStackView(arrangedSubviews: [currentWeatherStackView, otherInfoView])
+        let stackView = UIStackView(arrangedSubviews: [conditionStackView, otherInfoView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillProportionally
         currentWeatherView.addSubview(stackView)
         
-        stackView.setCustomSpacing(20.0, after: currentWeatherStackView)
+        stackView.setCustomSpacing(20.0, after: conditionStackView)
         
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor, constant: 20),
