@@ -7,13 +7,9 @@
 
 import Foundation
 
-struct Searches: Codable {
+struct SearchResultsData: Codable {
     let name: String
     let region: String
     let lat: Double
     let lon: Double
-}
-
-struct SearchResultsData: Codable {
-    
 }

@@ -15,7 +15,7 @@ protocol WeatherManagerDelegate {
 
 struct WeatherManager {
     let baseURL = "https://api.weatherapi.com/v1"
-    let currentMethod = "/current.json"
+    let currentMethod = "/current.json"   
     let forecastMethod = "/forecast.json"
     let searchMethod = "/search.json"
     let API_KEY = WeatherMapApiKey
@@ -30,7 +30,6 @@ struct WeatherManager {
     
     func fetchForecastWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
         let urlString = "\(baseURL)\(forecastMethod)?key=\(API_KEY)&q=\(latitude),\(longitude)&days=\(numDays)"
-        print(urlString)
         performRequest(with: urlString)
     }
     
@@ -44,7 +43,6 @@ struct WeatherManager {
                 }
                 if let safeData = data {
                     if let weather = self.parseJSON(safeData) {
-                        print(weather.cityName, weather.region)
                         self.delegate?.didUpdateWeather(self, weather: weather)
                     }
                 }
@@ -90,7 +88,7 @@ struct WeatherManager {
     }
     
     func fetchSearches(input: String) {
-        let urlString = "\(baseURL)\(searchMethod)?key=\(API_KEY)=\(input)"
+        let urlString = "\(baseURL)\(searchMethod)?key=\(API_KEY)&q=\(input)"
         performSearchRequest(with: urlString)
     }
     
@@ -104,10 +102,9 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-                    print("here")
-//                    if let results = self.parseSearchJSON(safeData) {
-                        // populate search results page
-//                    }
+                    if let results = self.parseSearchJSON(safeData) {
+//                         populate search results page
+                    }
                 }
             }
             task.resume()
@@ -115,20 +112,19 @@ struct WeatherManager {
         }
     }
     
-//    func parseSearchJSON(_ searchData: Data) -> SearchModel? {
-//        let decoder = JSONDecoder()
-//        do {
-//            let decodedData = try decoder.decode(Searches.self, from: searchData)
-//            let results = decodedData. { result ->
-//                SearchResultsModel in
-//                print(result.name, result.region)
-////                return SearchResultsModel(name: result.name, region: result.region, lat: result.lat, lon: result.lon)
-//            }
-////            return SearchModel(searchResults: results)
-//        }
-//        catch {
-//            delegate?.didFailWithError(error: error)
-//            return nil
-//        }
-//    }
+    func parseSearchJSON(_ searchData: Data) -> SearchModel? {
+        let decoder = JSONDecoder()
+        do {
+            let decodedData = try decoder.decode([SearchResultsData].self, from: searchData)
+            let results = decodedData.map { result ->
+                SearchResultsModel in
+                return SearchResultsModel(name: result.name, region: result.region, lat: result.lat, lon: result.lon)
+            }
+            return results
+        }
+        catch {
+            delegate?.didFailWithError(error: error)
+            return nil
+        }
+    }
 }

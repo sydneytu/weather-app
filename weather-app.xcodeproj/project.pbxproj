@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		A71A38EC287A66F40081F0F6 /* DailyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71A38EB287A66F40081F0F6 /* DailyCell.swift */; };
 		A7A2D73829175B26000762B0 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A2D73729175B26000762B0 /* SearchModel.swift */; };
-		A7A2D73A29175BB8000762B0 /* SearchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A2D73929175BB8000762B0 /* SearchData.swift */; };
+		A7A2D73A29175BB8000762B0 /* SearchResultsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A2D73929175BB8000762B0 /* SearchResultsData.swift */; };
 		A7B49A2F2837188C006DA00D /* HourCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B49A2E2837188C006DA00D /* HourCell.swift */; };
 		A7BE2E1328A4586000D76720 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7BE2E1228A4586000D76720 /* SearchResultsController.swift */; };
 		A7BF231C28EA779900D5FE2D /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7BF231B28EA779900D5FE2D /* Helpers.swift */; };
@@ -29,7 +29,7 @@
 /* Begin PBXFileReference section */
 		A71A38EB287A66F40081F0F6 /* DailyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCell.swift; sourceTree = "<group>"; };
 		A7A2D73729175B26000762B0 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
-		A7A2D73929175BB8000762B0 /* SearchData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchData.swift; sourceTree = "<group>"; };
+		A7A2D73929175BB8000762B0 /* SearchResultsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsData.swift; sourceTree = "<group>"; };
 		A7B49A2E2837188C006DA00D /* HourCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCell.swift; sourceTree = "<group>"; };
 		A7BE2E1228A4586000D76720 /* SearchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		A7BF231B28EA779900D5FE2D /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
@@ -99,7 +99,7 @@
 				A7C574B72828468600BE4E1B /* WeatherData.swift */,
 				A7C574B9282851FD00BE4E1B /* WeatherModel.swift */,
 				A7A2D73729175B26000762B0 /* SearchModel.swift */,
-				A7A2D73929175BB8000762B0 /* SearchData.swift */,
+				A7A2D73929175BB8000762B0 /* SearchResultsData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -212,7 +212,7 @@
 				A7DA38EE2883B8FC0028325F /* Extensions.swift in Sources */,
 				A7C574BA282851FD00BE4E1B /* WeatherModel.swift in Sources */,
 				A7BF231C28EA779900D5FE2D /* Helpers.swift in Sources */,
-				A7A2D73A29175BB8000762B0 /* SearchData.swift in Sources */,
+				A7A2D73A29175BB8000762B0 /* SearchResultsData.swift in Sources */,
 				A7C574A12826FBF900BE4E1B /* SceneDelegate.swift in Sources */,
 				A7BE2E1328A4586000D76720 /* SearchResultsController.swift in Sources */,
 				A71A38EC287A66F40081F0F6 /* DailyCell.swift in Sources */,
