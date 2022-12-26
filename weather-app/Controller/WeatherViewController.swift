@@ -141,9 +141,14 @@ class WeatherViewController: UIViewController {
         dailyTableView.dataSource = self
         dailyTableView.delegate = self
         
+        let searchResultsController = self.storyboard?.instantiateViewController(withIdentifier: "SearchResultsController") as? SearchResultsController
+        searchResultsController?.tableView.delegate = self
+        
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = true
+        searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Enter city"
+        
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "location"), style: .plain, target: self, action: #selector(userLocationButtonPressed))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonPressed))
@@ -164,7 +169,6 @@ class WeatherViewController: UIViewController {
         locationManager.requestLocation()
     }
     
-    // TODO: change name of function to something about going to next screen (show up)
     @objc func searchButtonPressed() {
         present(searchController, animated: true)
     }
@@ -340,6 +344,7 @@ class WeatherViewController: UIViewController {
     func isCurrentTime(cellTime: Int) -> Bool {
         return time24() == cellTime ? true : false
     }
+
 }
 
 // MARK: - WeatherManagerDelegate
@@ -451,9 +456,29 @@ extension WeatherViewController: UITableViewDelegate {
 // MARK: - UISearchResultsUpdating
 extension WeatherViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
+        let results = ["London", "Islikngton", "Hackney"]
         guard let text = searchController.searchBar.text else { return }
-        weatherManager.fetchSearches(input: text)
+        if text.count > 2 {
+            weatherManager.fetchSearches(input: text)
+            if let resultsVC = searchController.searchResultsController as? SearchResultsController {
+                resultsVC.results = results
+                resultsVC.tableView.reloadData()
+                print(resultsVC.results)
+                
+                // TODO: create no found label
+    //            resultsController.resultsLabel.text = resultsController.filteredProducts.isEmpty ?
+    //                NSLocalizedString("NoItemsFoundTitle", comment: "") :
+    //                String(format: NSLocalizedString("Items found: %ld", comment: ""),
+    //                       resultsController.filteredProducts.count)
+            }
+        }
     }
-    
-    
+}
+
+// MARK: - UISearchBarDelegate
+extension WeatherViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // TODO: make it so when clicked it shows the results
+        print("Search clicked")
+    }
 }

@@ -118,6 +118,7 @@ struct WeatherManager {
             let decodedData = try decoder.decode([SearchResultsData].self, from: searchData)
             let results = decodedData.map { result ->
                 SearchResultsModel in
+//                print(result.name)
                 return SearchResultsModel(name: result.name, region: result.region, lat: result.lat, lon: result.lon)
             }
             return results
