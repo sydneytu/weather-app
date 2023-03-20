@@ -463,7 +463,6 @@ extension WeatherViewController: UISearchResultsUpdating {
             if let resultsVC = searchController.searchResultsController as? SearchResultsController {
                 resultsVC.results = results
                 resultsVC.tableView.reloadData()
-                print(resultsVC.results)
                 
                 // TODO: create no found label
     //            resultsController.resultsLabel.text = resultsController.filteredProducts.isEmpty ?

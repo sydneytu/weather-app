@@ -13,7 +13,7 @@ class SearchResultsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureUI()
+//        configureUI()
         
         tableView.register(CityCell.self, forCellReuseIdentifier: "CityCell")
         // Do any additional setup after loading the view.
@@ -25,13 +25,13 @@ class SearchResultsController: UITableViewController {
 // MARK: - UITableViewDataSource
 extension SearchResultsController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return results.count
+        return 3
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CityCell", for: indexPath)
         var content = cell.defaultContentConfiguration()
-        content.text = results[indexPath.row]
+//        content.text = results[indexPath.row]
         cell.contentConfiguration = content
         return cell
         
