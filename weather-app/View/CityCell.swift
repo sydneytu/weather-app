@@ -9,6 +9,13 @@ import Foundation
 import UIKit
 
 class CityCell: UITableViewCell {
+    var city: SearchResultsModel? {
+        didSet {
+            cityRegionLabel.text = "\(city?.name ?? "city"), \(city?.region ?? "region")"
+            countryLabel.text = city?.country
+        }
+    }
+    
     private let cityRegionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)

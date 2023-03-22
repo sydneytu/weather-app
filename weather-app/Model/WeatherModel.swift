@@ -11,6 +11,7 @@ import UIKit
 struct WeatherModel {
     let cityName: String
     let region: String
+    let country: String
     let current: CurrentModel
     let forecast: [ForecastModel]
     

@@ -78,6 +78,7 @@ struct WeatherManager {
             let weather = WeatherModel(
                 cityName: decodedData.location.name,
                 region: decodedData.location.region,
+                country: decodedData.location.country,
                 current: current,
                 forecast: forecast)
             return weather
@@ -88,12 +89,13 @@ struct WeatherManager {
         }
     }
     
-    func fetchSearches(input: String) {
-        let urlString = "\(baseURL)\(searchMethod)?key=\(API_KEY)&q=\(input)"
-        performSearchRequest(with: urlString)
+    func fetchSearches(input: String, completion: @escaping(SearchModel) -> Void) {
+        let formattedInput = input.replacingOccurrences(of: " ", with: "%20")
+        let formattedUrlString = "\(baseURL)\(searchMethod)?key=\(API_KEY)&q=\(formattedInput)"
+        performSearchRequest(with: formattedUrlString, completion: completion)
     }
     
-    func performSearchRequest(with urlString: String) {
+    func performSearchRequest(with urlString: String, completion: @escaping(SearchModel) -> Void) {
         if let url = URL(string: urlString) {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, response, error in
@@ -104,7 +106,7 @@ struct WeatherManager {
                 }
                 if let safeData = data {
                     if let results = self.parseSearchJSON(safeData) {
-//                         populate search results page
+                        completion(results)
                     }
                 }
             }
@@ -119,8 +121,12 @@ struct WeatherManager {
             let decodedData = try decoder.decode([SearchResultsData].self, from: searchData)
             let results = decodedData.map { result ->
                 SearchResultsModel in
-//                print(result.name)
-                return SearchResultsModel(name: result.name, region: result.region, lat: result.lat, lon: result.lon)
+                return SearchResultsModel(
+                    name: result.name,
+                    region: result.region,
+                    country: result.country,
+                    lat: result.lat,
+                    lon: result.lon)
             }
             return results
         }

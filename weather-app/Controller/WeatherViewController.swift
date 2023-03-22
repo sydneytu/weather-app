@@ -9,6 +9,8 @@ import UIKit
 import CoreLocation
 
 class WeatherViewController: UIViewController {
+    // MARK: - Properties
+    
     private let mainView: UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -149,19 +151,10 @@ class WeatherViewController: UIViewController {
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Enter city"
         
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "location"), style: .plain, target: self, action: #selector(userLocationButtonPressed))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonPressed))
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .regular)]
-
-        definesPresentationContext = true
-        
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
-        
-        view.backgroundColor = #colorLiteral(red: 0.9138072133, green: 0.9178827405, blue: 0.9283933043, alpha: 1)
-        createMainView()
+
+        configureUI()
     }
     
     // MARK: - Actions
@@ -174,6 +167,18 @@ class WeatherViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    func configureUI() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "location"), style: .plain, target: self, action: #selector(userLocationButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonPressed))
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .regular)]
+
+        definesPresentationContext = true
+        
+        view.backgroundColor = #colorLiteral(red: 0.9138072133, green: 0.9178827405, blue: 0.9283933043, alpha: 1)
+        createMainView()
+    }
+    
     func createMainView() {
         view.addSubview(mainView)
         createCurrentWeatherView()
@@ -219,26 +224,13 @@ class WeatherViewController: UIViewController {
             backgroundImage.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor)
         ])
         
-//        let currentWeatherInfoStackView = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel, dateLabel])
-//        currentWeatherInfoStackView.translatesAutoresizingMaskIntoConstraints = false
-//        currentWeatherInfoStackView.setCustomSpacing(10.0, after: temperatureLabel)
-//        currentWeatherInfoStackView.axis = .vertical
-        
         let conditionStackView = UIStackView(arrangedSubviews: [conditionImageView, conditionDescLabel, dateLabel, temperatureLabel])
         conditionStackView.translatesAutoresizingMaskIntoConstraints = false
         conditionStackView.axis = .vertical
         conditionStackView.distribution = .fillProportionally
         conditionStackView.setCustomSpacing(-30.0, after: dateLabel)
         
-//        let currentWeatherStackView = UIStackView(arrangedSubviews: [currentWeatherInfoStackView, conditionStackView])
-//        currentWeatherStackView.translatesAutoresizingMaskIntoConstraints = false
-//        currentWeatherStackView.axis = .horizontal
-//        currentWeatherStackView.distribution = .equalSpacing
-        
         createOtherInfoView()
-//        let separator = UIView()
-//        separator.translatesAutoresizingMaskIntoConstraints = false
-//        separator.backgroundColor = .white
         
         let stackView = UIStackView(arrangedSubviews: [conditionStackView, otherInfoView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -252,8 +244,7 @@ class WeatherViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: currentWeatherView.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: currentWeatherView.trailingAnchor, constant: -20),
             stackView.topAnchor.constraint(equalTo: currentWeatherView.topAnchor, constant: 10),
-            stackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -10),
-//            separator.heightAnchor.constraint(equalToConstant: 1)
+            stackView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: -10)
         ])
     }
     
@@ -389,7 +380,6 @@ extension WeatherViewController: CLLocationManagerDelegate {
                 self.weatherManager.delegate?.didUpdateWeather(self.weatherManager, weather: weather)
             }
         }
-        
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -458,20 +448,25 @@ extension WeatherViewController: UITableViewDelegate {
 // MARK: - UISearchResultsUpdating
 extension WeatherViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        let results = ["London", "Islikngton", "Hackney"]
         guard let text = searchController.searchBar.text else { return }
         if text.count > 2 {
-            weatherManager.fetchSearches(input: text)
-            if let resultsVC = searchController.searchResultsController as? SearchResultsController {
-                resultsVC.results = results
-                resultsVC.tableView.reloadData()
-                
-                // TODO: create no found label
-    //            resultsController.resultsLabel.text = resultsController.filteredProducts.isEmpty ?
-    //                NSLocalizedString("NoItemsFoundTitle", comment: "") :
-    //                String(format: NSLocalizedString("Items found: %ld", comment: ""),
-    //                       resultsController.filteredProducts.count)
+            weatherManager.fetchSearches(input: text) { searchResults in
+                DispatchQueue.main.async {
+                    if let resultsVC = searchController.searchResultsController as? SearchResultsController {
+                        resultsVC.results = searchResults
+                        resultsVC.tableView.reloadData()
+                        
+                        // TODO: create no found label
+                        //            resultsController.resultsLabel.text = resultsController.filteredProducts.isEmpty ?
+                        //                NSLocalizedString("NoItemsFoundTitle", comment: "") :
+                        //                String(format: NSLocalizedString("Items found: %ld", comment: ""),
+                        //                       resultsController.filteredProducts.count)
+                    }
+                }
             }
+        }
+        else {
+            // clear search results
         }
     }
 }
@@ -480,6 +475,6 @@ extension WeatherViewController: UISearchResultsUpdating {
 extension WeatherViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // TODO: make it so when clicked it shows the results
-        print("Search clicked")
+        print("DEBUG: Search clicked")
     }
 }
