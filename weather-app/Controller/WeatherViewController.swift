@@ -385,7 +385,9 @@ extension WeatherViewController: CLLocationManagerDelegate {
             locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
-            weatherManager.fetchForecastWeather(latitude: lat, longitude: lon)
+            weatherManager.fetchForecastWeather(latitude: lat, longitude: lon) { weather in
+                self.weatherManager.delegate?.didUpdateWeather(self.weatherManager, weather: weather)
+            }
         }
         
     }

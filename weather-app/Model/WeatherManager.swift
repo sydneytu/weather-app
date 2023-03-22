@@ -23,33 +23,34 @@ struct WeatherManager {
     
     var delegate: WeatherManagerDelegate?
     
-    func fetchForecastWeather(cityName: String) {
+    func fetchForecastWeather(cityName: String, completion: @escaping(WeatherModel) -> Void) {
         let urlString = "\(baseURL)\(forecastMethod)?key=\(API_KEY)&q=\(cityName)&days=\(numDays)"
-        performRequest(with: urlString)
+        performRequest(with: urlString, completion: completion)
     }
     
-    func fetchForecastWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
+    func fetchForecastWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees, completion: @escaping(WeatherModel) -> Void) {
         let urlString = "\(baseURL)\(forecastMethod)?key=\(API_KEY)&q=\(latitude),\(longitude)&days=\(numDays)"
-        performRequest(with: urlString)
+        performRequest(with: urlString, completion: completion)
     }
     
-    func performRequest(with urlString: String) {
+    func performRequest(with urlString: String, completion: @escaping(WeatherModel) -> Void) {
         if let url = URL(string: urlString) {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, response, error in
                 if error != nil {
-                    self.delegate?.didFailWithError(error: error!)
+                    self.delegate?.didFailWithError(error: error!) // TODO: handle this with completion
                     return
                 }
                 if let safeData = data {
                     if let weather = self.parseJSON(safeData) {
-                        self.delegate?.didUpdateWeather(self, weather: weather)
+                        completion(weather)
                     }
                 }
             }
             task.resume()
         }
     }
+    
     
     func parseJSON(_ weatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
