@@ -7,16 +7,19 @@
 
 import UIKit
 
+private let reuseIdentifier = "CityCell"
+
 class SearchResultsController: UITableViewController {
     var results = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .white
+        tableView.contentInsetAdjustmentBehavior = .never
 //        configureUI()
         
-        tableView.register(CityCell.self, forCellReuseIdentifier: "CityCell")
-        // Do any additional setup after loading the view.
+        tableView.register(CityCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.rowHeight = 56
     }
     
     // MARK: - Helpers
@@ -29,11 +32,13 @@ extension SearchResultsController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CityCell", for: indexPath)
-        var content = cell.defaultContentConfiguration()
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+//        var content = cell.defaultContentConfiguration()
 //        content.text = results[indexPath.row]
-        cell.contentConfiguration = content
+//        cell.contentConfiguration = content
+//        cell.backgroundColor = .systemBlue
         return cell
         
+
     }
 }

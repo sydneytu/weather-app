@@ -181,7 +181,7 @@ class WeatherViewController: UIViewController {
         createDailyWeatherView()
         
         // mainStackView
-        let mainStackView = UIStackView(arrangedSubviews: [currentWeatherView,hourlyWeatherView, dailyWeatherView])
+        let mainStackView = UIStackView(arrangedSubviews: [currentWeatherView, hourlyWeatherView, dailyWeatherView])
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.axis = .vertical
         mainStackView.spacing = 10
