@@ -43,6 +43,7 @@ struct WeatherManager {
                 }
                 if let safeData = data {
                     if let weather = self.parseJSON(safeData) {
+                        print("DEBUG: <performRequest>")
                         completion(weather)
                     }
                 }
@@ -50,7 +51,6 @@ struct WeatherManager {
             task.resume()
         }
     }
-    
     
     func parseJSON(_ weatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
@@ -111,7 +111,6 @@ struct WeatherManager {
                 }
             }
             task.resume()
-            
         }
     }
     

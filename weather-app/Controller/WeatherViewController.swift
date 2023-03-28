@@ -130,7 +130,7 @@ class WeatherViewController: UIViewController {
     var dailyWeatherArr = [ForecastModel]()
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
-    let searchController = UISearchController(searchResultsController: SearchResultsController())
+    var searchResultsController =  SearchResultsController()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -142,14 +142,9 @@ class WeatherViewController: UIViewController {
         hourlyCollectionView.delegate = self
         dailyTableView.dataSource = self
         dailyTableView.delegate = self
+        searchResultsController.delegate = self
         
-        let searchResultsController = self.storyboard?.instantiateViewController(withIdentifier: "SearchResultsController") as? SearchResultsController
-        searchResultsController?.tableView.delegate = self
-        
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = true
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Enter city"
+        self.title = "WeatherViewController"
         
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
@@ -163,7 +158,7 @@ class WeatherViewController: UIViewController {
     }
     
     @objc func searchButtonPressed() {
-        present(searchController, animated: true)
+        present(searchResultsController, animated: true)
     }
     
     // MARK: - Helpers
@@ -172,8 +167,6 @@ class WeatherViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonPressed))
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .regular)]
-
-        definesPresentationContext = true
         
         view.backgroundColor = #colorLiteral(red: 0.9138072133, green: 0.9178827405, blue: 0.9283933043, alpha: 1)
         createMainView()
@@ -320,7 +313,7 @@ class WeatherViewController: UIViewController {
             view.bottomAnchor.constraint(equalTo: otherInfoView.bottomAnchor)
         ])
     }
-    
+
     func time24() -> Int {
         let time = Date()
         let timeFormatter = DateFormatter()
@@ -445,36 +438,12 @@ extension WeatherViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - UISearchResultsUpdating
-extension WeatherViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text else { return }
-        if text.count > 2 {
-            weatherManager.fetchSearches(input: text) { searchResults in
-                DispatchQueue.main.async {
-                    if let resultsVC = searchController.searchResultsController as? SearchResultsController {
-                        resultsVC.results = searchResults
-                        resultsVC.tableView.reloadData()
-                        
-                        // TODO: create no found label
-                        //            resultsController.resultsLabel.text = resultsController.filteredProducts.isEmpty ?
-                        //                NSLocalizedString("NoItemsFoundTitle", comment: "") :
-                        //                String(format: NSLocalizedString("Items found: %ld", comment: ""),
-                        //                       resultsController.filteredProducts.count)
-                    }
-                }
-            }
-        }
-        else {
-            // clear search results
-        }
-    }
-}
 
-// MARK: - UISearchBarDelegate
-extension WeatherViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // TODO: make it so when clicked it shows the results
-        print("DEBUG: Search clicked")
+extension WeatherViewController: SearchWeatherDelegate {
+    func searchDidComplete(with place: SearchResultsModel) {
+        print("DEBUG: <searchDidComplete>")
+        weatherManager.fetchForecastWeather(latitude: place.lat, longitude: place.lon) { weather in
+            self.weatherManager.delegate?.didUpdateWeather(self.weatherManager, weather: weather)
+        }
     }
 }
