@@ -48,11 +48,32 @@ class SearchResultsController: UITableViewController {
         searchController.searchBar.delegate = self
         definesPresentationContext = true
     }
+    
+    func showNoResultslabel() {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "No Results Found."
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textColor = .darkGray
+        tableView.backgroundView = label
+        tableView.separatorStyle = .none
+    }
 }
 
 // MARK: - UITableViewDataSource
 extension SearchResultsController {
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let textInput = searchController.searchBar.text {
+            if searchController.isActive && textInput.count > 2 {
+                if results.count == 0 {
+                    showNoResultslabel()
+                    return 0
+                }
+            }
+        }
+        tableView.separatorStyle = .singleLine
+        tableView.backgroundView = nil
         return results.count
     }
     
@@ -88,18 +109,12 @@ extension SearchResultsController: UISearchResultsUpdating {
                 DispatchQueue.main.async {
                     self.results = searchResults
                     self.tableView.reloadData()
-                    
-                    // TODO: create no found label
-                    //            resultsController.resultsLabel.text = resultsController.filteredProducts.isEmpty ?
-                    //                NSLocalizedString("NoItemsFoundTitle", comment: "") :
-                    //                String(format: NSLocalizedString("Items found: %ld", comment: ""),
-                    //                       resultsController.filteredProducts.count)
-                    
                 }
             }
         }
         else {
-            // clear search results
+            self.results = []
+            self.tableView.reloadData()
         }
     }
 }
