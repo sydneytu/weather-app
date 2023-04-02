@@ -88,6 +88,8 @@ extension SearchResultsController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let place = self.results[indexPath.row]
         dismiss(animated: true) {
+            self.searchController.searchBar.text = ""
+            self.results = []
             self.delegate?.searchDidComplete(with: place)
         }
     }

@@ -47,3 +47,18 @@ func getConditionName(_ conditionCode: Int, _ is_day: Int, withFill: Bool) -> St
     }
     return conditionName
 }
+
+func formatTime(_ time: Int) -> String {
+    let timeString = Date(timeIntervalSince1970: TimeInterval(time))
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "h a"
+    return dateFormatter.string(from: timeString)
+}
+
+func formatValue(_ value: Double) -> String {
+    return "\(value)"
+}
+
+func formatTemp(_ temp: Double) -> String {
+    return "\(String(format: "%.0f", temp))°"
+}

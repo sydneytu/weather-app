@@ -131,6 +131,8 @@ class WeatherViewController: UIViewController {
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
     var searchResultsController =  SearchResultsController()
+    var currentLocalTimeZone = ""
+    var currentLocalTime = 0
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -315,14 +317,16 @@ class WeatherViewController: UIViewController {
     }
 
     func time24() -> Int {
-        let time = Date()
+        let time = Date(timeIntervalSince1970: TimeInterval(currentLocalTime))
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH"
+        timeFormatter.timeZone = TimeZone(identifier: currentLocalTimeZone)
         return Int(timeFormatter.string(from: time))!
     }
     
     func scrollToCurrentHour() {
         self.hourlyCollectionView.scrollToItem(at: IndexPath(item: time24(), section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
+        self.hourlyCollectionView.reloadData()
     }
     
     func isCurrentTime(cellTime: Int) -> Bool {
@@ -336,11 +340,14 @@ extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         DispatchQueue.main.async {
             self.navigationItem.title = "\(weather.locationString)"
-            self.temperatureLabel.text = weather.current.tempString
+            self.temperatureLabel.text = formatTemp(weather.current.temp)
             self.feelsLikeLabel.text = weather.current.feelsLikeString
             self.conditionDescLabel.text = weather.current.condition
             self.dateLabel.text = weather.forecast.first?.days.formmattedDay
-            self.uvIndexLabel.text = weather.current.uvIndexString
+            self.uvIndexLabel.text = formatValue(weather.current.uv)
+            self.visibilityLabel.text = formatValue(weather.current.visibility)
+            self.windMphLabel.text = formatValue(weather.current.windMph)
+            self.humidityLabel.text = formatValue(weather.current.humidity)
             
             let config = UIImage.SymbolConfiguration(pointSize: 48, weight: .light)
             self.conditionImageView.image = UIImage(systemName: getConditionName(weather.current.conditionCode, weather.current.is_day, withFill: true), withConfiguration: config)
@@ -352,6 +359,8 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.dailyTableView.reloadData()
             
             self.hourlyCollectionView.reloadData()
+            self.currentLocalTimeZone = weather.timezone
+            self.currentLocalTime = weather.localtime
             self.scrollToCurrentHour()
         }
     }
@@ -392,8 +401,8 @@ extension WeatherViewController: UICollectionViewDataSource {
         }
         if self.hoursWeatherArr.count > 0 {
             var hour = self.hoursWeatherArr[indexPath.item]
-            cell.temp = hour.formattedTemp
-            cell.time = hour.formattedTime
+            cell.temp = formatTemp(hour.temp)
+            cell.time = formatTime(hour.time)
             cell.conditionName = hour.conditionName
             hour.isCurrent = isCurrentTime(cellTime: hour.timeAsHour) ? true : false
             cell.isCurrentCell = hour.isCurrent
@@ -423,8 +432,8 @@ extension WeatherViewController: UITableViewDataSource {
         if self.dailyWeatherArr.count > 0 {
             let day = self.dailyWeatherArr[indexPath.row].days
             cell.dayOfWeek = day.formmattedDay
-            cell.maxTemp = day.formmattedMaxTemp
-            cell.minTemp = day.formattedMinTemp
+            cell.maxTemp = formatTemp(day.maxTemp)
+            cell.minTemp = formatTemp(day.minTemp)
             cell.conditionName = day.conditionName
         }
         return cell

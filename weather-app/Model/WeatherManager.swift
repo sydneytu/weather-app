@@ -74,11 +74,14 @@ struct WeatherManager {
                 windMph: decodedData.current.wind_mph,
                 feelsLike: decodedData.current.feelslike_f,
                 uv: decodedData.current.uv,
-                visibility: decodedData.current.vis_miles)
+                visibility: decodedData.current.vis_miles,
+                humidity: decodedData.current.humidity)
             let weather = WeatherModel(
                 cityName: decodedData.location.name,
                 region: decodedData.location.region,
                 country: decodedData.location.country,
+                localtime: decodedData.location.localtime_epoch,
+                timezone: decodedData.location.tz_id,
                 current: current,
                 forecast: forecast)
             return weather

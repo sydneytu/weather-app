@@ -12,11 +12,21 @@ struct WeatherModel {
     let cityName: String
     let region: String
     let country: String
+    let localtime: Int
+    let timezone: String
     let current: CurrentModel
     let forecast: [ForecastModel]
     
     var locationString: String {
         return "\(cityName), \(region)"
+    }
+    
+    var formattedLocalTime: String {
+        let timeString = Date(timeIntervalSince1970: TimeInterval(localtime))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h a"
+        dateFormatter.timeZone = TimeZone(identifier: timezone)
+        return dateFormatter.string(from: timeString)
     }
 }
 
@@ -29,17 +39,10 @@ struct CurrentModel {
     let feelsLike: Double
     let uv: Double
     let visibility: Double
-    
-    var tempString: String {
-        return "\(String(format: "%.0f", temp))°"
-    }
+    let humidity: Double
     
     var feelsLikeString: String {
         return "Feels Like \(String(format: "%.0f", feelsLike))°"
-    }
-    
-    var uvIndexString: String {
-        return "\(uv)"
     }
         
     var conditionName: String {
@@ -91,14 +94,6 @@ struct DaysModel {
         return dayOfWeek
     }
     
-    var formmattedMaxTemp: String {
-        return "\(String(format: "%.0f", maxTemp))°"
-    }
-    
-    var formattedMinTemp: String {
-        return "\(String(format: "%.0f", minTemp))°"
-    }
-    
     var conditionName: String {
         switch conditionCode {
         case 1000: // Sunny
@@ -130,17 +125,6 @@ struct HoursModel {
     let condition: String
     let conditionCode: Int
     var isCurrent: Bool
-    
-    var formattedTime: String {
-        let timeString = Date(timeIntervalSince1970: TimeInterval(time))
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h a"
-        return dateFormatter.string(from: timeString)
-    }
-    
-    var formattedTemp: String {
-        return "\(String(format: "%.0f", temp))°"
-    }
     
     var timeAsHour: Int {
         let timeString = Date(timeIntervalSince1970: TimeInterval(time))

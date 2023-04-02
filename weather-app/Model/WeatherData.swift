@@ -17,6 +17,8 @@ struct Location: Codable {
     let name: String
     let region: String
     let country: String
+    let localtime_epoch: Int
+    let tz_id: String
 }
 
 struct Current: Codable {
